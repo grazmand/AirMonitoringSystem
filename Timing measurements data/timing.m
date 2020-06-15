@@ -56,21 +56,15 @@ plot(sensors.xy(:,1),sensors.xy(:,2),'g*')
 %% Draw only simulated CO2 measurements lying within the borders
 
 sensor_index = 1;
-time_index = 1;
 
-for is = 1:size( ST,1 )
-    for t = 1:size( ST,2 )
+for ip = 1:size(sensors.labels,2)
         
-        if ismember(t,sensors.timing(time_index:end))
-            sensors.simulated_mes = ST(sensor_index,t);
-            time_index = t+1;
-            sensor_index = sensor_index + 1;
-        end
+        sensors.simulated_mes(sensor_index) = ST(sensors.labels(ip),sensors.timing(sensor_index));
+        sensor_index = sensor_index + 1;
         
-    end
 end
 
 %% Draw only real CO2 measurements lying within the borders
 
-sensors.real_mes = num(sensors.labels,1);
+sensors.real_mes = num(sensors.labels,1)';
 
