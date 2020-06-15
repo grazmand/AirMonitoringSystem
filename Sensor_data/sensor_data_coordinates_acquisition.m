@@ -23,6 +23,7 @@ figure
 pdeplot(Mesh_Nodes,Mesh_Edges,Mesh_Elements)
 hold on
 plot(s_x,s_y,'g*')
+%plot(sensors.xy(:,1),sensors.xy(:,2),'g*')
 
 %% Concentration acquisition
 
@@ -90,7 +91,7 @@ end
 
 sort_state_sys_border_node = sort( state_sys_border_nodes );
 
-%% Shifting coordinate
+%% Shifting coordinate // le coordinate si fanno coincidere con quelle del nodo più vicino al punto di misura dell'elemento che lo contiene
 
 for is = 1:size( sensors.xy,1 )
     
