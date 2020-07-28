@@ -109,7 +109,7 @@ Mesh_Boundaries = border_map_1;
 mesh.boundaries = border_map_1
 clear border_map_1;
 Mesh_Boundaries_X = zeros(1,size(Mesh_Boundaries,2));
-mesh.boundaries.nodes = zeros(1,size(Mesh_Boundaries,2))
+mesh.boundaries.nodes = 
 Mesh_Boundaries_Y = zeros(1,size(Mesh_Boundaries,2));
 Mesh_Boundaries_Coordinates = zeros(2,size(Mesh_Boundaries,2));
 for i = 1:size(Mesh_Boundaries,2)
