@@ -26,7 +26,7 @@ classdef Mesh < matlab.mixin.SetGet
         %% boundary methods
         function setCounterclockwiseBoundaryNodeIndexes(obj)
             if ~isempty(obj.edges)
-                obj.set('boundary_counterclockwiseNodeIndexes', obj.edges(1,:));
+                obj.set('boundary_counterclockwiseNodeIndexes', obj.);
             end
         end
         

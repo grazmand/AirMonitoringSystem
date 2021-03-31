@@ -10,7 +10,7 @@ classdef TimeT < matlab.mixin.SetGet
         
         ending double {mustBePositive} % simulation end time : u.m. in *dt.unit_measure
         times double {mustBeNonnegative} % simulation time vector : u.m. in *dt.unit_measure
-        time_steps {mustBePositive} % simulation total steps
+        time_steps {mustBePositive, mustBeInteger} % simulation total steps
         unit_measure string = 'seconds'
     end
     

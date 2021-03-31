@@ -22,7 +22,7 @@ mesh.maxTriEdgeSize = 30; % um in meters
 
 %% load the decomposed geometry matrix of the area of Novoli
 disp('-> load the decomposed geometry matrix of the area of Novoli')
-load(strcat(mainFolder,'\decomposed geometry matrix\g.mat'));
+load('./decomposed geometry matrix/g.mat');
 
 %% set all simulation parameters
 disp('-> set all simulation parameters')
@@ -104,12 +104,12 @@ pdeplot(Mesh_Nodes,Mesh_Edges,Mesh_Elements); % add ",'NodeLabels','on');" if yo
 %% load the boundaries of the area of Novoli
 disp('-> load the boundaries of the area of Novoli')
 %%%% load and process mesh boundaries
-load(strcat(mainFolder,'\Mesh_Dir\border_map_1.mat'));
+load(strcat('./Mesh_Dir/border_map_1.mat'));
 Mesh_Boundaries = border_map_1;
-mesh.boundaries = border_map_1
+mesh.boundaries = border_map_1;
 clear border_map_1;
 Mesh_Boundaries_X = zeros(1,size(Mesh_Boundaries,2));
-mesh.boundaries.nodes = zeros(1,size(Mesh_Boundaries,2))
+% mesh.boundaries.nodes = zeros(1,size(Mesh_Boundaries,2));
 Mesh_Boundaries_Y = zeros(1,size(Mesh_Boundaries,2));
 Mesh_Boundaries_Coordinates = zeros(2,size(Mesh_Boundaries,2));
 for i = 1:size(Mesh_Boundaries,2)

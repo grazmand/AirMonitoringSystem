@@ -1,12 +1,26 @@
 clear 
+[main_folder,~,~] = fileparts(mfilename('fullpath'));
+cd(main_folder)
 
 %% load the decomposed geometry matrix of the area of Novoli
 disp('-> load the decomposed geometry matrix of the area of Novoli')
-load(strcat('./decomposed geometry matrix/g.mat'));
+load('./decomposed geometry matrix/g.mat');
 
 %% dt
-dt
+dt = TimeDiscretizationStep;
+dt.time_discretization_step({0.001})
 
 %% time
 time = TimeT;
 time.time({1,dt})
+time.set_time
+
+%% load domain
+load('./borders/coordinates_data.mat');
+border_coordinates = Mesh_Boundaries_Coordinates';
+clear Mesh_Boundaries_Coordinates
+
+%% domain
+domain = Domain;
+domain
+domain.plot_domain
