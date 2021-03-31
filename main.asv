@@ -1,0 +1,12 @@
+clear 
+
+%% load the decomposed geometry matrix of the area of Novoli
+disp('-> load the decomposed geometry matrix of the area of Novoli')
+load(strcat('./decomposed geometry matrix/g.mat'));
+
+%% dt
+dt
+
+%% time
+time = TimeT;
+time.time({1,dt})

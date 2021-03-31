@@ -1,0 +1,31 @@
+classdef TimeT < matlab.mixin.SetGet
+    % class : TimeT
+    %
+    % description : contains objects for setting timing simulation properties
+    %
+    properties (SetAccess = private, GetAccess = public)
+        start double {mustBeNonnegative} = 0 % simulation start time : u.m. in seconds
+        T double {mustBePositive} % simulation duration : u.m. in seconds
+        dt TimeDiscretizationStep % simulation discrete time step : u.m. in seconds
+        
+        end_time double {mustBePositive} % simulation end time : u.m. in seconds
+        times double {mustBeNonnegative} % simulation time vector : u.m. in seconds
+        time_steps {mustBePositive} % simulation total steps
+    end
+    
+    methods
+        function time(obj ,vals)
+            props = {'T','dt'};
+            obj.set(props, vals)
+        end
+        
+        function set_time(obj)
+            obj.endTime = obj.start_time + obj.time - obj.dt.value;
+            obj.times = obj.startTime:obj.dt.value:obj.endTime;
+            obj.timeSteps = round(obj.times/obj.dt.value+1);
+            if ~ismember(length(obj.timeSteps),length(obj.times))
+                error('timing error')
+            end
+        end
+    end
+end
