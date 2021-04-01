@@ -2,6 +2,7 @@ clear
 close all
 [main_folder,~,~] = fileparts(mfilename('fullpath'));
 cd(main_folder)
+addpath(genpath(main_folder)); % adds to path the main folder and all its sub-folder
 
 %% load the decomposed geometry matrix of the area of Novoli
 disp('-> load the decomposed geometry matrix of the area of Novoli')
@@ -16,16 +17,13 @@ time = TimeT;
 time.time({1,dt})
 time.set_time
 
-%% load domain
+%% load domain boundary
 load('./borders/coordinates_data.mat');
+%
+% data : Mesh_Boundaries_Coordinates is a matrix 2xN containig boundary
+% coordinates
+%
 border_coordinates = Mesh_Boundaries_Coordinates';
-Mesh_Boundaries_X = Mesh_Boundaries_Coordinates(1,:);
-Mesh_Boundaries_Y = Mesh_Boundaries_Coordinates(2,:);
-Domain_Geometry_Description = [2;size(Mesh_Boundaries_Coordinates,2);...
-    Mesh_Boundaries_X';Mesh_Boundaries_Y'];
-Mesh_Boundaries_Coordinates_Closed = [Mesh_Boundaries_Coordinates Mesh_Boundaries_Coordinates(:,1)]';
-Domain_Geometry_Description_Decomposition = decsg(Domain_Geometry_Description);
-clear Mesh_Boundaries_Coordinates
 
 %% domain
 domain = Domain;
@@ -37,11 +35,14 @@ mesh=Mesh;
 mesh.mesh({'mesh',10,domain})
 mesh.plot_mesh(true)
 
+%% check boundaries alignment
+run('check_boundary_alignment.m')
+
 %% scenario
 scenario = Scenario;
 scenario.scenario({'dirichlet'});
 
 %% bc
 bc = BoundaryConditions;
-bc.boundary_conditions({scenario,mesh});
+bc.boundary_conditions({scenario,mesh,boundary_counterclockwiseNodeIndexes});
 bc.checkBoundaryConditions(true)

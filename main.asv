@@ -1,4 +1,5 @@
 clear 
+close all
 [main_folder,~,~] = fileparts(mfilename('fullpath'));
 cd(main_folder)
 
@@ -15,12 +16,24 @@ time = TimeT;
 time.time({1,dt})
 time.set_time
 
-%% load domain
-load('./borders/coordinates_data.mat');
-border_coordinates = Mesh_Boundaries_Coordinates';
-clear Mesh_Boundaries_Coordinates
+%% load domain boundary
+run
 
 %% domain
 domain = Domain;
-domain
-domain.plot_domain
+domain.domain({'domain',border_coordinates,g})
+domain.plot_domain(true)
+
+%% mesh
+mesh=Mesh;
+mesh.mesh({'mesh',10,domain})
+mesh.plot_mesh(true)
+
+%% scenario
+scenario = Scenario;
+scenario.scenario({'dirichlet'});
+
+%% bc
+bc = BoundaryConditions;
+bc.boundary_conditions({scenario,mesh});
+bc.checkBoundaryConditions(true)

@@ -23,13 +23,7 @@ classdef Mesh < matlab.mixin.SetGet
     end
     
     methods
-        %% boundary methods
-        function setCounterclockwiseBoundaryNodeIndexes(obj)
-            if ~isempty(obj.edges)
-                obj.set('boundary_counterclockwiseNodeIndexes', obj.edges(1,:));
-            end
-        end
-        
+        %% boundary methods       
         function setCounterclockwiseBoundaryNodeCoordinates(obj)
             if ~isempty(obj.boundary_counterclockwiseNodeIndexes)
                 obj.set('boundary_counterclockwiseNodeCoordinates', obj.node_coordinates(:,obj.boundary_counterclockwiseNodeIndexes));
@@ -37,7 +31,6 @@ classdef Mesh < matlab.mixin.SetGet
         end
         
         function setBoundaries(obj)
-            obj.setCounterclockwiseBoundaryNodeIndexes();
             obj.setCounterclockwiseBoundaryNodeCoordinates();
         end
         
@@ -62,7 +55,7 @@ classdef Mesh < matlab.mixin.SetGet
         
         %% bc methods
         function set_boundary_conditions(obj, vals)
-            props = {'bc'};
+            props = {'bc','boundary_counterclockwiseNodeIndexes'};
             obj.set(props, vals)
             obj.setBoundaries()
         end

@@ -1,0 +1,24 @@
+%% load domain boundary
+ 
+load('./borders/coordinates_data.mat');
+%
+% data : Mesh_Boundaries_Coordinates is a matrix 2xN containig boundary
+% coordinates
+%
+border_coordinates = Mesh_Boundaries_Coordinates';
+Mesh_Boundaries_X = Mesh_Boundaries_Coordinates(1,:);
+Mesh_Boundaries_Y = Mesh_Boundaries_Coordinates(2,:);
+Domain_Geometry_Description = [2;size(Mesh_Boundaries_Coordinates,2);...
+    Mesh_Boundaries_X';Mesh_Boundaries_Y'];
+Domain_Geometry_Description_Decomposition = decsg(Domain_Geometry_Description);
+x=Domain_Geometry_Description_Decomposition(2,:);
+y=Domain_Geometry_Description_Decomposition(4,:);
+[~,boundary_counterclockwiseNodeIndexes] = ismember(x,mesh.node_coordinates(1,:));
+
+% check
+
+figure
+if true
+plot(x,mesh.node_coordinates(1,boundary_counterclockwiseNodeIndexes),'ro')
+title('check bounds')
+end

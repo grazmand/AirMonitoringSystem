@@ -5,6 +5,7 @@ classdef BoundaryConditions < matlab.mixin.SetGet
         scenario Scenario
         mesh Mesh
         %%
+        boundary_counterclockwiseNodeIndexes double
         radiation BoundaryCondition
         dirichlet BoundaryCondition
         neumann BoundaryCondition
@@ -12,9 +13,9 @@ classdef BoundaryConditions < matlab.mixin.SetGet
     
     methods
         function boundary_conditions(obj, vals)
-            props = {'scenario','mesh'};
+            props = {'scenario','mesh','boundary_counterclockwiseNodeIndexes'};
             obj.set(props, vals);
-            obj.mesh.set_boundary_conditions({obj})
+            obj.mesh.set_boundary_conditions({obj, obj.boundary_counterclockwiseNodeIndexes})
             obj.set_boundary_conditions;
         end
         
@@ -47,12 +48,19 @@ classdef BoundaryConditions < matlab.mixin.SetGet
                     plot(obj.radiation.counterclockwiseNodeCoordinates(1,:),obj.radiation.counterclockwiseNodeCoordinates(2,:),'bo','DisplayName','radiation');
                 end
                 if ~isempty(obj.dirichlet)
-                    plot(obj.dirichlet.counterclockwiseNodeCoordinates(1,:),obj.dirichlet.counterclockwiseNodeCoordinates(2,:),'ro','DisplayName','dirichlet');
+                    plot(obj.dirichlet.counterclockwiseNodeCoordinates(1,:),obj.dirichlet.counterclockwiseNodeCoordinates(2,:),'-ro','DisplayName','dirichlet',...
+                        'LineWidth',0.5,'MarkerSize',3);
                 end
                 if ~isempty(obj.neumann)
                     plot(obj.neumann.counterclockwiseNodeCoordinates(1,:),obj.neumann.counterclockwiseNodeCoordinates(2,:),'go','DisplayName','neumann');
                 end
                 legend('-DynamicLegend')
+                axes = gca;
+                set(axes,'FontWeight','bold')
+                xlabel('latitude','FontWeight','bold')
+                ylabel('longitude','FontWeight','bold')
+                title('boundary conditions')
+                grid on
             end
         end
     end
