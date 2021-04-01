@@ -34,26 +34,7 @@ classdef Mesh < matlab.mixin.SetGet
             obj.setCounterclockwiseBoundaryNodeCoordinates();
         end
         
-        function checkBoundaries(obj,bool)
-            if bool
-                figure
-                hold on
-                plot(obj.s1_counterclockwiseNodeCoordinates(1,:),...
-                    obj.s1_counterclockwiseNodeCoordinates(2,:),'bo',...
-                    'MarkerSize',10)
-                plot(obj.s2_counterclockwiseNodeCoordinates(1,:),...
-                    obj.s2_counterclockwiseNodeCoordinates(2,:),'go')
-                plot(obj.s3_counterclockwiseNodeCoordinates(1,:),...
-                    obj.s3_counterclockwiseNodeCoordinates(2,:),'ro',...
-                    'MarkerSize',10)
-                plot(obj.s4_counterclockwiseNodeCoordinates(1,:),...
-                    obj.s4_counterclockwiseNodeCoordinates(2,:),'yo')
-                legend('s1','s2','s3','s4')
-                title('Boundaries')
-            end
-        end
-        
-        %% bc methods
+        %% bc method
         function set_boundary_conditions(obj, vals)
             props = {'bc','boundary_counterclockwiseNodeIndexes'};
             obj.set(props, vals)
