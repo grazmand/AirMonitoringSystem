@@ -46,3 +46,7 @@ scenario.scenario({'dirichlet'});
 bc = BoundaryConditions;
 bc.boundary_conditions({scenario,mesh,boundary_counterclockwiseNodeIndexes});
 bc.checkBoundaryConditions(true)
+
+%% handle road data
+[street,long_array,long_max,List,buildpoly,Inbuildpoly,poly] = Handle_Street(main_folder);
+

@@ -4,9 +4,9 @@ function [street , long_array , long_max] = preLoadingData(mainFolder)
 %% This script preloads the map data:
 
 %% Path
-path_rgb_1 = strcat(mainFolder,'\Wheater_and_traffic_data\2017-11-15\2');
-path_rgb_2 = strcat(mainFolder,'\RGB_Data\Dati RGB');
-path_rgb_3 = strcat(mainFolder,'\Shape_buildings_and_roads\street_coord.mat');
+path_rgb_1 = strcat(mainFolder,'/Wheater_and_traffic_data/2017-11-15/2');
+path_rgb_2 = strcat(mainFolder,'/RGB_Data/Dati RGB');
+path_rgb_3 = strcat(mainFolder,'/Shape_buildings_and_roads/street_coord.mat');
 
 %% 1) Loading of the traffic images
 
@@ -77,12 +77,3 @@ end
 clearvars -except street long_array long_max
 
 end
-
-
-
-
-
-
-
-
-
