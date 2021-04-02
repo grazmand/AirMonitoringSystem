@@ -4,6 +4,7 @@ classdef Structures < matlab.mixin.SetGet
         mesh Mesh
         n_blocks {mustBeInteger}
         nodes_blocks cell
+        elements_blocks cell
     end
     
     methods
@@ -15,20 +16,14 @@ classdef Structures < matlab.mixin.SetGet
         end
         
         function set_elements_blocks(obj)
-            indexProgress = 1;
-            tic
+            disp('compute nodes for each set of polygon blocks')
             for i=1:obj.n_blocks
+                fprintf('block %d of %d\n',i,obj.n_blocks)
                 n_elements = size(obj.blocks{i},2);
                 for e=1:n_elements
-                    if e>=floor(n_elements/10)*indexProgress
-                        fprintf(' %d/%d ',indexProgress,min(n_elements,10));
-                        indexProgress = indexProgress + 1;
-                    end
-                    [obj.nodes_blocks{i}{e}]=FemTools.find_elements_in_polygon(obj.mesh,obj.blocks{i}(:,e));
+                    [obj.nodes_blocks{i}{e}, obj.elements_blocks{i}{e}]=FemTools.find_elements_in_polygon(obj.mesh,obj.blocks{i}(:,e));
                 end
             end
-            toc
-            fprintf(' \n')
         end
         
         function plot_blocks(obj,bool)

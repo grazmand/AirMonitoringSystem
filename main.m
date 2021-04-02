@@ -4,6 +4,14 @@ close all
 cd(main_folder)
 addpath(genpath(main_folder)); % adds to path the main folder and all its sub-folder
 
+%% current date
+currDate = strrep(datestr(datetime), ':', '_');
+fprintf('---------air quality monitoring system at %s---------\n',currDate)
+
+%% data folder
+data_folder = sprintf('data/sim_%s', currDate);
+mkdir(data_folder)
+
 %% load the decomposed geometry matrix of the area of Novoli
 disp('-> load the decomposed geometry matrix of the area of Novoli')
 load('./decomposed geometry matrix/g.mat');
@@ -49,6 +57,13 @@ bc.checkBoundaryConditions(true)
 
 %% handle road data
 [street,long_array,long_max,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
-roads=Structures;
+roads=Roads;
+roads.set_rgb_list({List});
 roads.structures({roads_poly,mesh})
 roads.plot_blocks(true)
+
+%% save data
+save(strcat(data_folder,'/data.mat'))
+
+
+

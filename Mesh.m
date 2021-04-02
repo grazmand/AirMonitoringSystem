@@ -20,10 +20,12 @@ classdef Mesh < matlab.mixin.SetGet
         allNodesExceptDirichletNodes_indexes {mustBeInteger}
         allNodesExceptDirichletNodes_coordinates double
         allNodesExceptDirichletNodes_size {mustBeInteger}
+        %% element centroids
+        element_centroids
     end
     
     methods
-        %% boundary methods       
+        %% boundary methods
         function setCounterclockwiseBoundaryNodeCoordinates(obj)
             if ~isempty(obj.boundary_counterclockwiseNodeIndexes)
                 obj.set('boundary_counterclockwiseNodeCoordinates', obj.node_coordinates(:,obj.boundary_counterclockwiseNodeIndexes));
@@ -46,7 +48,7 @@ classdef Mesh < matlab.mixin.SetGet
             if ~isempty(obj.bc)
                 obj.set('allNodesExceptDirichletNodes_indexes', setdiff(1:obj.nodeSizeNumber, obj.bc.dirichlet.counterclockwiseNodeIndexes));
                 obj.set('allNodesExceptDirichletNodes_size', length(obj.allNodesExceptDirichletNodes_indexes));
-                obj.set('allNodesExceptDirichletNodes_coordinates', obj.nodeCoordinates(:,obj.allNodesExceptDirichletNodes_indexes));
+                obj.set('allNodesExceptDirichletNodes_coordinates', obj.node_coordinates(:,obj.allNodesExceptDirichletNodes_indexes));
             elseif isempty(obj.bc)
                 error('boundary conditions missing');
             end
@@ -62,8 +64,9 @@ classdef Mesh < matlab.mixin.SetGet
             obj.set('node_coordinates',nd)
             obj.set('edges',ed)
             obj.set('elements',el)
-            obj.set_node_size_number
-            obj.set_element_size_number
+            obj.set_node_size_number()
+            obj.set_element_size_number()
+            obj.set_element_centroids()
             
             % plot mesh properties
             fprintf('----------------------------------------- \n');
@@ -97,6 +100,15 @@ classdef Mesh < matlab.mixin.SetGet
                 ylabel('longitude','FontWeight','bold')
                 legend()
                 grid on
+            end
+        end
+        
+        %% element centroid
+        function set_element_centroids(obj)
+            obj.element_centroids = zeros(obj.element_size_number,2);
+            for ie=1:obj.element_size_number
+                [obj.element_centroids(ie,1),obj.element_centroids(ie,2)] = FemTools.computeCentroid(obj.node_coordinates(1, obj.elements(1,ie)),obj.node_coordinates(1, obj.elements(2,ie)),obj.node_coordinates(1, obj.elements(3,ie)),...
+                    obj.node_coordinates(2, obj.elements(1,ie)), obj.node_coordinates(2, obj.elements(2,ie)), obj.node_coordinates(2, obj.elements(3,ie)));
             end
         end
     end
