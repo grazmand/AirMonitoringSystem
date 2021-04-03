@@ -21,10 +21,14 @@ classdef Sources < matlab.mixin.SetGet
         
         function set_element_indexes(obj)
             i_e=1;
-            for ib=1:size(obj.roads.element_blocks,2)
-                for ip=1:size(obj.roads.element_blocks{ib},2)
-                    for ie=1:size(obj.roads.element_blocks{ib}{ip},2)
-                        obj.element_indexes(i_e)=obj.roads.element_blocks{ib}{ip}(i_e);
+            for ib=1:size(obj.roads.elements_blocks,2)
+                for ip=1:size(obj.roads.elements_blocks{ib},2)
+                    for ie=1:size(obj.roads.elements_blocks{ib}{ip},2)
+                        obj.element_indexes(i_e)=obj.roads.elements_blocks{ib}{ip}(ie);
+                        % check
+                        if true && obj.element_indexes(i_e)==0
+                            error('element indexes must be positive')
+                        end
                         i_e=i_e+1;
                     end
                 end

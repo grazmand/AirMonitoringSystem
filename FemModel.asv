@@ -47,7 +47,7 @@ classdef FemModel < matlab.mixin.SetGet
             for ie = 1:obj.mesh.elementSizeNumber
                 
                 [Me, Se, obj.shapeCoefficients(:,:,ie)] = set_coeff_shapes_and_local_matrices(ie, obj.mesh);
-                [M,S] = build_global_fem_matrices(obj,M,S,...
+                [M,S] = build_global_fem_matrices(obj.medium.alpha,M,S,...
                     ie,Me,Se,ie);
                 
             end
@@ -69,19 +69,20 @@ classdef FemModel < matlab.mixin.SetGet
         end
         
         function initialize_fem_matrices(obj)
-            
-            n_nodes = obj.mesh.nodeSizeNumber;
-            aned_nodes = obj.mesh.allNodesExceptDirichletNodes_indexes;
-            d_nodes = obj.boundaryConditions.dirichlet.counterclockwiseNodeIndexes;
+            n_nodes=obj.mesh.node_size_number;
+            aned_nodes=obj.mesh.allNodesExceptDirichletNodes_indexes;
+            n_aned_nodes=length(aned_nodes);
+            d_nodes=obj.boundaryConditions.dirichlet.counterclockwiseNodeIndexes;
+            n_d_nodes=length(d_nodes);
             
             obj.massMatrix = zeros(n_nodes, n_nodes);
-            obj.stifnessMatrix = zeros(obj.mesh.nodeSizeNumber, obj.mesh.nodeSizeNumber);
+            obj.stifnessMatrix = zeros(n_nodes, n_nodes);
             
-            obj.massMatrix_allNodesExceptDirichletNodes = zeros(obj.mesh.allNodesExceptDirichletNodes_size, obj.mesh.allNodesExceptDirichletNodes_size);
-            obj.stifnessMatrix_allNodesExceptDirichletNodes = zeros(obj.mesh.allNodesExceptDirichletNodes_size, obj.mesh.allNodesExceptDirichletNodes_size);
+            obj.massMatrix_allNodesExceptDirichletNodes = zeros(n_aned_nodes, n_aned_nodes);
+            obj.stifnessMatrix_allNodesExceptDirichletNodes = zeros(n_aned_nodes, n_aned_nodes);
             
-            obj.massMatrix_dirichlet = zeros(obj.mesh.allNodesExceptDirichletNodes_size, obj.boundaryConditions.dirichlet.nodeSize);
-            obj.stifnessMatrix_dirichlet = zeros(obj.mesh.allNodesExceptDirichletNodes_size, obj.boundaryConditions.dirichlet.nodeSize);
+            obj.massMatrix_dirichlet = zeros(n_aned_nodes, n_d_nodes);
+            obj.stifnessMatrix_dirichlet = zeros(n_aned_nodes, n_d_nodes);
         end
         
         function initialize_shape_coefficients(obj)
@@ -100,7 +101,7 @@ classdef FemModel < matlab.mixin.SetGet
             [stifnessLocalMatrix, massLocalMatrix, elementShapeCoefficients] = FemModel.build_local_fem_matrices(elementNodeCoordinates);
         end
         
-        function [M,S] = build_global_fem_matrices(Me,Se,M,S,mesh,ie)
+        function [M,S] = build_global_fem_matrices(alpha,Me,Se,M,S,mesh,ie)
             %%%% ------------ build mass matrix
             M (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) =...
                 M (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) + Me;
@@ -145,9 +146,9 @@ classdef FemModel < matlab.mixin.SetGet
             % phi_2(x,y) = a2 + b2 * x + c2 * y
             % phi_3(x,y) = a3 + b3 * x + c3 * y
             %          _        _
-            %         | a1 b1 c1 |
-            % Shape = | a2 b2 c2 |
-            %         |_a3 b3 c3_|
+            %         | a1 a2 a3 |
+            % Shape = | b1 b2 b3 |
+            %         |_c1 c2 c3_|
             %
             % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             Se = zeros(3,3); % local stifness matrix

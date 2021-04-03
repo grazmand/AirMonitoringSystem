@@ -14,9 +14,10 @@ classdef BoundaryConditions < matlab.mixin.SetGet
     methods
         function boundary_conditions(obj, vals)
             props = {'scenario','mesh','boundary_counterclockwiseNodeIndexes'};
-            obj.set(props, vals);
+            obj.set(props, vals)
             obj.mesh.set_boundary_conditions({obj, obj.boundary_counterclockwiseNodeIndexes})
-            obj.set_boundary_conditions;
+            obj.set_boundary_conditions()
+            obj.mesh.setInternalNodes()
         end
         
         function obj = set_boundary_conditions(obj)

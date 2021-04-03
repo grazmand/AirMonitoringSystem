@@ -38,6 +38,10 @@ for i = 1:index
         
         count = count - 1;
         
+        if count==1
+            deb=0
+        end
+        
     end
     
 end

@@ -3,7 +3,7 @@ classdef ForceTerm < matlab.mixin.SetGet
         %% basics
         name string
         sources Sources
-        time Time
+        time TimeT
         %% derivative
         force_term double
     end

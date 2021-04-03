@@ -46,7 +46,7 @@ classdef Mesh < matlab.mixin.SetGet
         %% internal nodes methods
         function setInternalNodes(obj)
             if ~isempty(obj.bc)
-                obj.set('allNodesExceptDirichletNodes_indexes', setdiff(1:obj.nodeSizeNumber, obj.bc.dirichlet.counterclockwiseNodeIndexes));
+                obj.set('allNodesExceptDirichletNodes_indexes', setdiff(1:obj.node_size_number, obj.bc.dirichlet.counterclockwiseNodeIndexes));
                 obj.set('allNodesExceptDirichletNodes_size', length(obj.allNodesExceptDirichletNodes_indexes));
                 obj.set('allNodesExceptDirichletNodes_coordinates', obj.node_coordinates(:,obj.allNodesExceptDirichletNodes_indexes));
             elseif isempty(obj.bc)

@@ -8,6 +8,10 @@ for ip = 1:size(street.xy,2)
     
     [ street.data{ie}.acolor{ip} , street.data{ie}.color{ip} ] = motor_color ( street.rgb{ie} , street.xy{ip} );
     
+    if ip==13
+       deb=0; 
+    end
+    
     [ street.poly{ip} , long_array{ip} , long_max{ip}  ] = StreetGenerator_mod_2 ( street.coord{ip} , street.data{ie}.acolor{ip} );
     
 end

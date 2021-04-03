@@ -1,31 +1,30 @@
 function [street , long_array , long_max] = preLoadingData(mainFolder)
 
 
-%% This script preloads the map data:
+%% this script preloads map data
 
-%% Path
-path_rgb_1 = strcat(mainFolder,'/Wheater_and_traffic_data/2017-11-15/2');
+%% paths
+traffic_rgb_data_path = strcat(mainFolder,'/Wheater_and_traffic_data/2017-11-15/2');
 path_rgb_2 = strcat(mainFolder,'/RGB_Data/Dati RGB');
 path_rgb_3 = strcat(mainFolder,'/Shape_buildings_and_roads/street_coord.mat');
 
-%% 1) Loading of the traffic images
-
-dir_to_search = path_rgb_1;
-
+%% 1) loading rgb traffic image data
+%
+%
+%
+%
+%
+%
+%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+dir_to_search = traffic_rgb_data_path;
 pngpattern = fullfile(dir_to_search, '*.png');
-
 dinfo = dir(pngpattern);
-
 rgb = cell(1,size(dinfo,1));
-
 for ip = 1:size(dinfo,1)
-    
     rgb{ip} = imread(dinfo(ip).name);
-    
 end
-
 street.rgb = rgb;
-
 clear rgb;
 
 %% 2) Loading of the road points in which the RGB coordinates are stored
