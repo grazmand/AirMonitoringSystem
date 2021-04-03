@@ -1,4 +1,4 @@
-function [street , long_array , long_max, List, buildpoly, Inbuildpoly, poly] = Handle_Street(mainFolder)
+function [street, List, buildpoly, Inbuildpoly, poly] = Handle_Street(mainFolder)
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -21,7 +21,7 @@ function [street , long_array , long_max, List, buildpoly, Inbuildpoly, poly] = 
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% loading maps
-[street , long_array , long_max] = preLoadingData(mainFolder);
+street = preLoadingData(mainFolder);
 poly = street.poly;
 List = cell(1,size(street.data,2));
 for ie = 1:size(street.data,2)

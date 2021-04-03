@@ -1,4 +1,4 @@
-function street=preLoadingData(mainFolder)
+function [street , long_array , long_max] = preLoadingData(mainFolder)
 
 
 %% this script preloads map data
@@ -14,8 +14,8 @@ path_rgb_3 = strcat(mainFolder,'/Shape_buildings_and_roads/street_coord.mat');
 % traffic image data : 141-size cell array whose each element contains
 % a 1080x1920x3-size array storing the rgb coordinates of a image sample
 %
-% rgb image road coordinates : coordinates of position of each road polygon
-% with respect of the traffic image data axis
+% rgb image road coordinates : coordinates of position of each road polygon 
+% with respect of the traffic image data axis  
 % so that x-coordinate range among 1 and 1080 and y-coordinate range among
 % 1 and 1920
 %
@@ -51,13 +51,20 @@ clear street_coord;
 
 for ip = 1:size(street.datacolor,2)
     for jp = 1:size(street.datacolor{ip},2)
+
         street.xy{ip}(jp,1) = street.datacolor{ip}(jp).Position(1);
         street.xy{ip}(jp,2) = street.datacolor{ip}(jp).Position(2);
+        
     end
+    
 end
+
 for ip = 1:size(street.rgb,2)
-    street = street_data ( street, ip );
+    
+    [ street , long_array , long_max  ] = street_data ( street, ip );
+    
 end
+
 clearvars -except street long_array long_max
 
 end

@@ -58,7 +58,7 @@ bc.checkBoundaryConditions(true)
 tlc1=true;
 %% handle road data
 if tlc1
-    [street,long_array,long_max,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
+    [street,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
     roads=Roads;
     roads.set_rgb_list({List});
     roads.structures({roads_poly,mesh})
