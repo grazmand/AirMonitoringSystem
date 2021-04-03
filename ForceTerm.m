@@ -21,7 +21,7 @@ classdef ForceTerm < matlab.mixin.SetGet
         
         function setForceTerm(obj)
             obj.initForceTerm()
-            obj.force_term(obj.sources.elementNodeIndexes,:) = - obj.sources.em_factor .* obj.sources.shapes;
+            obj.force_term(obj.sources.elementNodeIndexes,:) = obj.sources.em_factor .* obj.sources.shapes;
         end
     end
 end
