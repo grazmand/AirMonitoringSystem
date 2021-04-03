@@ -144,9 +144,9 @@ classdef FemModel < matlab.mixin.SetGet
             % phi_2(x,y) = a2 + b2 * x + c2 * y
             % phi_3(x,y) = a3 + b3 * x + c3 * y
             %          _        _
-            %         | a1 b1 c1 |
-            % Shape = | a2 b2 c2 |
-            %         |_a3 b3 c3_|
+            %         | a1 a2 a3 |
+            % Shape = | b1 b2 b3 |
+            %         |_c1 c2 c3_|
             %
             % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             Se = zeros(3,3); % local stifness matrix

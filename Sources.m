@@ -7,7 +7,7 @@ classdef Sources < matlab.mixin.SetGet
         coordinates string % NX2 array
         element_indexes {mustBeInteger}
         em_factor double = 0.1
-        shapes double
+        shapes double % (n_element_indexes)x(3)
     end
     
     methods
@@ -36,8 +36,10 @@ classdef Sources < matlab.mixin.SetGet
         end
         
         function set_shapes(obj)
-            obj.shapes(obj.element_indexes,:)=getShapes(obj.afemm.femModel, obj.elementBelonged(k), [obj.cm.state(1,k),...
-                obj.cm.state(3,k)] );
+            for ie=1:length(obj.element_indexes)
+                obj.shapes(ie,:)=getShapes(obj.fem,ie,[obj.coordinates(ie,1),...
+                    obj.coordinates(ie,2)] );
+            end
         end
     end
 end
