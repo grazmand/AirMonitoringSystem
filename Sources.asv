@@ -1,6 +1,7 @@
 classdef Sources < matlab.mixin.SetGet
     properties (SetAccess = private, GetAccess = public)
         roads Roads
+        mesh Mesh
         coordinates string % NX2 array
         element_indexes {mustBeInteger}
         em_factor double = 0.1
@@ -8,14 +9,25 @@ classdef Sources < matlab.mixin.SetGet
     
     methods
         function source(obj ,vals)
-            props = {'roads'};
+            props = {'roads','mesh'};
             obj.set(props, vals)
+            obj.s
         end
         
         function set_element_indexes(obj)
-            for ib=1:size(obj.roads.blocks,2)
-                for ip=1:size(obj.roads.blocks{},2)
+            i_e=1;
+            for ib=1:size(obj.roads.element_blocks,2)
+                for ip=1:size(obj.roads.element_blocks{ib},2)
+                    for ie=1:size(obj.roads.element_blocks{ib}{ip},2)
+                        obj.element_indexes(i_e)=obj.roads.element_blocks{ib}{ip}(i_e);
+                        i_e=i_e+1;
+                    end
+                end
+            end
+        end
+        
+        function set_coordinates(obj)
+            obj.coordinates=obj.mesh.element_centroids(obj.element_indexes,:);
         end
     end
-    
 end

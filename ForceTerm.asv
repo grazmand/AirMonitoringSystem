@@ -1,0 +1,33 @@
+classdef ForceTerm < matlab.mixin.SetGet
+    properties (SetAccess = private, GetAccess = public)
+        %% basics
+        name string
+        sources Sources
+        time Time
+        %% derivative
+        force_term double
+    end
+    
+    methods
+        function forceTerm(obj, vals)
+            props = {'name','sources','time'};
+            obj.set(props, vals)
+            obj.setForceTerm;
+        end
+        
+        function initForceTerm(obj)
+            obj.force_term = zeros(obj.source.afemm.mesh.nodeSizeNumber,obj.source.time.);
+        end
+        
+        function setForceTerm(obj)
+            obj.initForceTerm;
+            if ismember('static',obj.source.type)
+                obj.dtForceTerm(obj.source.elementNodeIndexes,:) = - obj.source.discreteTimeSourceTerm .* obj.source.shapes' * (obj.source.afemm.density)^-1;
+            elseif ismember('moving',obj.source.type)
+                for k=obj.source.time.timeSteps
+                    obj.dtForceTerm(obj.source.elementNodeIndexes(:,k),k) = - obj.source.discreteTimeSourceTerm(k) * obj.source.shapes(:,k)' * (obj.source.afemm.density)^-1;
+                end
+            end
+        end
+    end
+end
