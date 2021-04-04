@@ -15,7 +15,7 @@ function [shape] = getShapes( fem, element, point )
 
 shape = zeros(1,3);
 for vertex = 1:3
-    shape(vertex) = fem.shapes_coefficients(:,vertex,element)' * [1;point'];
+    shape(vertex) = fem.shape_coefficients(:,vertex,element)' * [1;point'];
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %
     % the above operation over the whole for iteration is equivalent to

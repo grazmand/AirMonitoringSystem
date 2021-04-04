@@ -12,7 +12,7 @@ classdef Sources < matlab.mixin.SetGet
     
     methods
         function sources(obj ,vals)
-            props = {'name','roads','mesh','fem'};
+            props = {'name','roads','mesh','fem','em_factor'};
             obj.set(props, vals)
             obj.set_element_indexes()
             obj.set_coordinates()
@@ -41,8 +41,8 @@ classdef Sources < matlab.mixin.SetGet
         
         function set_shapes(obj)
             for ie=1:length(obj.element_indexes)
-                obj.shapes(ie,:)=getShapes(obj.fem,ie,[obj.coordinates(ie,1),...
-                    obj.coordinates(ie,2)] );
+                obj.shapes(ie,:)=getShapes(obj.fem,ie,[str2num(obj.coordinates(ie,1)),...
+                    str2num(obj.coordinates(ie,2))] );
             end
         end
     end

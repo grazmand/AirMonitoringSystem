@@ -27,8 +27,9 @@ classdef Sources < matlab.mixin.SetGet
                         obj.element_indexes(i_e)=obj.roads.elements_blocks{ib}{ip}(ie);
                         % check
                         if true && obj.element_indexes(i_e)==0
-                        i_e=i_e+1;
+                            error('element indexes must be positive')
                         end
+                        i_e=i_e+1;
                     end
                 end
             end
@@ -40,7 +41,7 @@ classdef Sources < matlab.mixin.SetGet
         
         function set_shapes(obj)
             for ie=1:length(obj.element_indexes)
-                obj.shapes(ie,:)=getShapes(obj.fem,ie,[obj.coordinates(ie,1),...
+                obj.shapes(ie,:)=getShapes(obj.fem,ie,[str2num(obj.coordinates(ie,1),...
                     obj.coordinates(ie,2)] );
             end
         end

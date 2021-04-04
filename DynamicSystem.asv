@@ -20,7 +20,7 @@ classdef DynamicSystem  < matlab.mixin.SetGet
         function setInitialState(obj)
             n_nodes = obj.mesh.node_size_number;
             anedn_indexes = obj.mesh.allNodesExceptDirichletNodes_indexes;
-            dirichlet_indexes = obj.boundaryConditions.dirichlet.counterclockwiseNodeIndexes;
+            dirichlet_indexes = obj.mesh.bc.dirichlet.counterclockwiseNodeIndexes;
             obj.initial_state = zeros(n_nodes, 1);
             obj.initial_state(anedn_indexes) = obj.stateInitialCondition;
             obj.initial_state(dirichlet_indexes) = obj.dirichletValue;
@@ -32,18 +32,18 @@ classdef DynamicSystem  < matlab.mixin.SetGet
             n_nodes = obj.mesh.node_size_number;
             anedn_indexes = obj.mesh.allNodesExceptDirichletNodes_indexes;
             dirichlet_indexes = obj.mesh.bc.dirichlet.counterclockwiseNodeIndexes;
-            t_steps = obj.ft.time.timeSteps;
+            t_steps = obj.ft.time.time_steps;
             x0 = obj.initial_state(anedn_indexes);
             x_d = obj.initial_state(dirichlet_indexes);
             
-            delta = obj.afemm.time.dt.value;
+            delta = obj.ft.time.dt.value;
             
             obj.state = zeros(n_nodes, length(t_steps));
             obj.state(dirichlet_indexes,:) = repmat(x_d,1,length(t_steps));
             
             indexProgress = 1;
             
-            for k=t_steps(1:end-2)
+            for k=t_steps(1:end-1)
                 if k>=round(length(t_steps)/10)*indexProgress
                     fprintf(' %d/%d ',indexProgress,min(length(t_steps),10));
                     indexProgress = indexProgress + 1;
@@ -54,21 +54,18 @@ classdef DynamicSystem  < matlab.mixin.SetGet
                 obj.state(anedn_indexes,k)=x0;
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                if k>2
-[x_1]=dynamicSystemSimulator(x_0,...
-                M_aned,...
-                S_aned,...
-                M_d,...
-                S_d,...
-                x_1_d,...
-                x_0_d,...
-                f,...
-                delta)
-                    
-                    x0 = x1;
-                    x1 = x2;
-                    obj.state(anedn_indexes,k+2) = x2;
-                end
+                [x1]=dynamicSystemSimulator(x0,...
+                    obj.fem.massMatrix_allNodesExceptDirichletNodes,...
+                    obj.fem.stifnessMatrix_allNodesExceptDirichletNodes,...
+                    obj.fem.massMatrix_dirichlet,...
+                    obj.fem.,...
+                    x_d,...
+                    x_d,...
+                    obj.ft.force_term(k),...
+                    delta);
+                
+                x0 = x1;
+                obj.state(anedn_indexes,k+1) = x1;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
             end
