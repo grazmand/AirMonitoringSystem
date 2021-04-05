@@ -7,7 +7,7 @@ classdef Sources < matlab.mixin.SetGet
         coordinates string % NX2 array
         element_indexes {mustBeInteger}
         em_factor double = 0.1
-        shapes double % (n_element_indexes)x(3)
+        shapes double %{mustBeInRange(shapes,0,1)}% (n_element_indexes)x(3)
     end
     
     methods
@@ -43,6 +43,14 @@ classdef Sources < matlab.mixin.SetGet
             for ie=1:length(obj.element_indexes)
                 obj.shapes(ie,:)=getShapes(obj.fem,ie,[str2num(obj.coordinates(ie,1)),...
                     str2num(obj.coordinates(ie,2))] );
+            end
+        end
+        
+        function plot_sources(obj,bool)
+            if bool
+                figure
+                plot(str2double(obj.coordinates(:,1)),str2double(obj.coordinates(:,2)),'ro')
+                title('source coords')
             end
         end
     end

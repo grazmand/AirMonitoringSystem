@@ -80,6 +80,7 @@ fem.fem_model({mesh,medium,bc})
 
 sources = Sources;
 sources.sources({'road_sources',roads,mesh,fem,0.001})
+sources.plot_sources(true)
 
 ft = ForceTerm;
 ft.forceTerm({'FT',sources,time,mesh})
