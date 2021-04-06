@@ -22,11 +22,11 @@ load('./decomposed geometry matrix/g.mat');
 
 %% dt
 dt = TimeDiscretizationStep;
-dt.time_discretization_step({0.001})
+dt.time_discretization_step({1})
 
 %% time
 time = TimeT;
-time.time({1,dt})
+time.time({2000,dt})
 time.set_time
 
 %% load domain boundary
@@ -73,26 +73,30 @@ else
 end
 
 medium = Medium;
-medium.medium({1e-6})
+medium.medium({1.381e-9/time.dt.value})
 
 fem = FemModel;
 fem.fem_model({mesh,medium,bc})
 
 sources = Sources;
-sources.sources({'road_sources',roads,mesh,fem,0.001})
+sources.sources({'road_sources',roads,mesh,fem,1e-4})
 sources.plot_sources(true)
 
 ft = ForceTerm;
 ft.forceTerm({'FT',sources,time,mesh})
 
 ds = DynamicSystem;
-ds.dynamicSystem({fem,mesh,ft,0})
+ds.dynamicSystem({fem,mesh,ft,400})
 ds.setState()
+
+disp(max(max(ds.state)))
+disp(min(min(ds.state)))
 
 %% dynamic field
 nodes_data_ds = ds.state;
 df = DynamicField;
-df.dynamicField({nodes_data_ds,ds,1,20,1000,videoFolderName});
+res=30;
+df.dynamicField({nodes_data_ds,ds,time.time_steps(1),round((time.time_steps(end)-time.time_steps(1))/res),time.time_steps(end),videoFolderName});
 df.plotField(true, true)
 VideoManager.videoMaker(videoFolderName, '*.png', 'field.avi', true);
 

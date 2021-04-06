@@ -3,11 +3,11 @@ classdef DynamicSystem  < matlab.mixin.SetGet
         fem FemModel
         mesh Mesh
         ft ForceTerm
-        dirichletValue double = 0
-        stateInitialCondition double = 0
+        dirichletValue double = 400 % u.m. in ppm - g/m^3;
+        stateInitialCondition double = 400 % u.m. in ppm - g/m^3;
         
         initial_state double
-        state double
+        state double {mustBeNonnegative,mustBeNonNan}
     end
     
     methods

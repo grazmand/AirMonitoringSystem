@@ -36,6 +36,7 @@ classdef DynamicField  < matlab.mixin.SetGet
                     grid on
                     caxis('auto');
                     colorbar();
+                    colormap parula % cb styles : parula, hot.
                     tit = sprintf('Dynamic System, time %0.1d [sec.]', k*obj.ds.ft.time.dt.value);
                     title(tit)
                     xlabel('range [m]', 'FontWeight', 'bold')
