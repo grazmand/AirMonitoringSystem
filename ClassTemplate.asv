@@ -1,4 +1,4 @@
-classdef Source < matlab.mixin.SetGet
+classdef EmFactor < matlab.mixin.SetGet
     properties (SetAccess = private, GetAccess = public)
     end
     

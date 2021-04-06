@@ -7,7 +7,6 @@ classdef Sources < matlab.mixin.SetGet
         coordinates string % NX2 array
         element_indexes {mustBeInteger}
         element_poly_length {mustBePositive}
-        em_factor double = 0.1
         shapes double {mustBeInRange(shapes,0,1)}% (n_element_indexes)x(3)
     end
     
@@ -27,6 +26,7 @@ classdef Sources < matlab.mixin.SetGet
                     for ie=1:size(obj.roads.elements_blocks{ib}{ip},2)
                         obj.element_indexes(i_e)=obj.roads.elements_blocks{ib}{ip}(ie);
                         obj.element_poly_length(i_e)=obj.roads.long_max{ib}{ip}(ie);
+                        obj.element_poly_los(i_e)=obj.roads.list{ib}{ip}(ie);
                         % check
                         if true && obj.element_indexes(i_e)==0
                             error('element indexes must be positive')

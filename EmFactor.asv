@@ -1,0 +1,34 @@
+classdef EmFactor < matlab.mixin.SetGet
+    properties (SetAccess = private, GetAccess = public)
+        type string % type can be 'co2' or 'co' 
+        sources Sources
+        time TimeT
+        % los velocities in Km/h
+        v_los_a=52;
+        v_los_b=37;
+        v_los_c=27;
+        v_los_d=22;
+        % vehicle class probabilities
+        p_passenger_cars=0.6;
+        p_mopeds=0.3;
+        p_trucks=0.08;
+        p_urban_buses=
+    end
+    
+    methods
+        function em_factor(obj ,vals)
+            props = {'sources'};  
+            obj.set(props, vals)
+            obj.conv_v_los()
+        end
+        
+        function conv_v_los(obj)
+            % conv Km/h in Kdeg/(sec*deltaT)
+            conv=10*obj.time.dt.value/3600;
+            obj.v_los_a=obj.v_los_a*conv;
+            obj.v_los_b=obj.v_los_b*conv;
+            obj.v_los_c=obj.v_los_c*conv;
+            obj.v_los_d=obj.v_los_d*conv;         
+        end
+    end  
+end
