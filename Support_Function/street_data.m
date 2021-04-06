@@ -13,7 +13,7 @@ for ip = 1:size(street.xy,2)
     [ street.data{ie}.acolor{ip} , street.data{ie}.color{ip} ] = motor_color ( street.rgb{ie} , street.xy{ip} );
     
     
-    [street.poly{ip}, street.data{ie}.acolor{ip}]= StreetGenerator_mod_2 ( street.coord{ip} , street.data{ie}.acolor{ip} );
+    [street.poly{ip},street.long_max{ip},street.data{ie}.acolor{ip}]= StreetGenerator_mod_2 ( street.coord{ip} , street.data{ie}.acolor{ip} );
     
 end
 

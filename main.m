@@ -64,8 +64,9 @@ tlc1=false;
 if tlc1
     [street,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
     roads=Roads;
-    roads.set_rgb_list({List});
     roads.structures({roads_poly,mesh})
+    roads.set_rgb_list({List});
+    roads.set_long_max({street.long_max});
     roads.plot_blocks(true)
     save('data/roads.mat','roads')
 else
@@ -104,6 +105,3 @@ VideoManager.videoMaker(videoFolderName, '*.png', 'field.avi', true);
 if false
     save(strcat(data_folder,'/data.mat'))
 end
-
-
-
