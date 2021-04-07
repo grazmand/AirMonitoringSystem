@@ -3,7 +3,7 @@ classdef ForceTerm < matlab.mixin.SetGet
         %% basics
         name string
         sources Sources
-        time TimeT 
+        time TimeT % must be inherited from EmFactor class
         mesh Mesh
         %% derivative
         force_term double
