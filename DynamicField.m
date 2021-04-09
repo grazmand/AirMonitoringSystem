@@ -90,8 +90,6 @@ classdef DynamicField  < matlab.mixin.SetGet
                         fieldValuesOnNodes(mesh.elements(3,ie))];
                 end
             end
-            
         end
     end
-    
 end

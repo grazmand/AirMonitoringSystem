@@ -58,11 +58,11 @@ scenario.scenario({'dirichlet'});
 bc = BoundaryConditions;
 bc.boundary_conditions({scenario,mesh,boundary_counterclockwiseNodeIndexes});
 bc.checkBoundaryConditions(true)
+[street,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
 
 tlc1=false;
 %% handle road data
 if tlc1
-    [street,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
     roads=Roads;
     roads.structures({roads_poly,mesh})
     roads.set_rgb_list({List});
@@ -74,13 +74,15 @@ else
 end
 
 medium = Medium;
-medium.medium({1.381e-9/time.dt.value})
+medium.medium({1.381e-9/dt.value})
 
 fem = FemModel;
 fem.fem_model({mesh,medium,bc})
 
+% ef=EmFactor;
+
 sources = Sources;
-sources.sources({'road_sources',roads,mesh,fem,1e-4})
+sources.sources({'road_sources',roads,mesh,fem})
 sources.plot_sources(true)
 
 ft = ForceTerm;
@@ -96,8 +98,8 @@ disp(min(min(ds.state)))
 %% dynamic field
 nodes_data_ds = ds.state;
 df = DynamicField;
-res=30;
-df.dynamicField({nodes_data_ds,ds,time.time_steps(1),round((time.time_steps(end)-time.time_steps(1))/res),time.time_steps(end),videoFolderName});
+n_frame=30;
+df.dynamicField({nodes_data_ds,ds,time.time_steps(1),round((time.time_steps(end)-time.time_steps(1))/n_frame),time.time_steps(end),videoFolderName});
 df.plotField(true, true)
 VideoManager.videoMaker(videoFolderName, '*.png', 'field.avi', true);
 

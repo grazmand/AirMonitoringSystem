@@ -54,19 +54,19 @@ classdef FemModel < matlab.mixin.SetGet
             
             M_allNodesExceptDirichletNodes = M(aned_nodes, aned_nodes);
             M_dirichlet = M(aned_nodes, d_nodes);
-            obj.massMatrix = sparse(M);
+            obj.massMatrix = M;
             clear M
             
             S_allNodesExceptDirichletNodes = S(aned_nodes, aned_nodes);
             S_dirichlet = S(aned_nodes, d_nodes);
-            obj.stifnessMatrix = sparse(S);
+            obj.stifnessMatrix = S;
             clear S
             
-            obj.massMatrix_allNodesExceptDirichletNodes = sparse(M_allNodesExceptDirichletNodes);
-            obj.stifnessMatrix_allNodesExceptDirichletNodes = sparse(S_allNodesExceptDirichletNodes);
+            obj.massMatrix_allNodesExceptDirichletNodes = M_allNodesExceptDirichletNodes;
+            obj.stifnessMatrix_allNodesExceptDirichletNodes = S_allNodesExceptDirichletNodes;
             
-            obj.massMatrix_dirichlet = sparse(M_dirichlet);
-            obj.stifnessMatrix_dirichlet = sparse(S_dirichlet);
+            obj.massMatrix_dirichlet = M_dirichlet;
+            obj.stifnessMatrix_dirichlet = S_dirichlet;
             
         end
         
@@ -77,14 +77,14 @@ classdef FemModel < matlab.mixin.SetGet
             d_nodes=obj.boundaryConditions.dirichlet.counterclockwiseNodeIndexes;
             n_d_nodes=length(d_nodes);
             
-            obj.massMatrix = zeros(n_nodes, n_nodes);
-            obj.stifnessMatrix = zeros(n_nodes, n_nodes);
+            obj.massMatrix = sparse(zeros(n_nodes, n_nodes));
+            obj.stifnessMatrix = sparse(zeros(n_nodes, n_nodes));
             
-            obj.massMatrix_allNodesExceptDirichletNodes = zeros(n_aned_nodes, n_aned_nodes);
-            obj.stifnessMatrix_allNodesExceptDirichletNodes = zeros(n_aned_nodes, n_aned_nodes);
+            obj.massMatrix_allNodesExceptDirichletNodes = sparse(zeros(n_aned_nodes, n_aned_nodes));
+            obj.stifnessMatrix_allNodesExceptDirichletNodes = sparse(zeros(n_aned_nodes, n_aned_nodes));
             
-            obj.massMatrix_dirichlet = zeros(n_aned_nodes, n_d_nodes);
-            obj.stifnessMatrix_dirichlet = zeros(n_aned_nodes, n_d_nodes);
+            obj.massMatrix_dirichlet = sparse(zeros(n_aned_nodes, n_d_nodes));
+            obj.stifnessMatrix_dirichlet = sparse(zeros(n_aned_nodes, n_d_nodes));
         end
         
         function initialize_shape_coefficients(obj)

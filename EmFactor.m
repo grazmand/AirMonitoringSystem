@@ -1,6 +1,6 @@
 classdef EmFactor < matlab.mixin.SetGet
     properties (SetAccess = private, GetAccess = public)
-        time TimeT
+        dt TimeDiscretizationStep
         % los velocities in Km/h
         v_los_a=52;
         v_los_b=37;
@@ -20,7 +20,7 @@ classdef EmFactor < matlab.mixin.SetGet
     
     methods
         function em_factor(obj ,vals)
-            props = {'sources'};
+            props = {'dt'};
             obj.set(props, vals)
             obj.check_vehicle_probs()
         end

@@ -18,9 +18,9 @@ classdef EmFactorCo2<EmFactor
             % ef in g/Km
             obj.ef_los_a=set_ef_los(Va,p_pc,p_t,p_m,p_ub);
             % ef in (g*veh.)/(Km*h)
-            obj.ef_los_a=obj.ef_los_a*obj.flow.a;
+            obj.ef_los_a=obj.ef_los_a*obj.f_los_a;
             % ef in (g*veh.)/(m*sec.*deltaT)
-            conv=obj.time.dt.value/(1000*3600);
+            conv=obj.dt.value/(1000*3600);
             obj.ef_los_a=conv*obj.ef_los_a;
         end
         function set_ef_los_b(obj)
@@ -35,7 +35,7 @@ classdef EmFactorCo2<EmFactor
             % ef in (g*veh.)/(Km*h)
             obj.ef_los_b=obj.ef_los_b*obj.flow.a;
             % ef in (g*veh.)/(m*sec.*deltaT)
-            conv=obj.time.dt.value/(1000*3600);
+            conv=obj.dt.value/(1000*3600);
             obj.ef_los_b=conv*obj.ef_los_b;
         end
         function set_ef_los_c(obj)
@@ -50,7 +50,7 @@ classdef EmFactorCo2<EmFactor
             % ef in (g*veh.)/(Km*h)
             obj.ef_los_c=obj.ef_los_c*obj.flow.a;
             % ef in (g*veh.)/(m*sec.*deltaT)
-            conv=obj.time.dt.value/(1000*3600);
+            conv=obj.dt.value/(1000*3600);
             obj.ef_los_c=conv*obj.ef_los_c;
         end
         function set_ef_los_d(obj)
@@ -65,7 +65,7 @@ classdef EmFactorCo2<EmFactor
             % ef in (g*veh.)/(Km*h)
             obj.ef_los_d=obj.ef_los_d*obj.flow.a;
             % ef in (g*veh.)/(m*sec.*deltaT)
-            conv=obj.time.dt.value/(1000*3600);
+            conv=obj.dt.value/(1000*3600);
             obj.ef_los_d=conv*obj.ef_los_d;
         end
     end
