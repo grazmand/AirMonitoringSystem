@@ -87,7 +87,7 @@ loadMeshData = false;
 disp('-> generate the mesh')
 tic
 if ~loadMeshData
-        
+    
     [Mesh_Nodes,Mesh_Edges,Mesh_Elements] = initmesh(g,'Hmax',mesh.maxTriEdgeSize);
     mesh.nodes = Mesh_Nodes;
     mesh.edges = Mesh_Edges;
@@ -267,7 +267,7 @@ U0_sys = zeros(size(Mesh_Nodes,2),1) + T_zero';
 
 %% Set boundary condition initial state
 
-u_Dirichlet_0 = U0_sys(Dirichlet_nodes); 
+u_Dirichlet_0 = U0_sys(Dirichlet_nodes);
 u_Dirichlet_k = u_Dirichlet_0;
 
 Utot = zeros(length(state_sys),steps_tot);
