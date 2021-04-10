@@ -64,11 +64,13 @@ classdef Sources < matlab.mixin.SetGet
         end
         
         function set_poly_rgb(obj)
-            i_p=1;
-            for ib=1:size(obj.roads.list,2)
-                for ip=1:size(obj.roads.list{ib},2)
-                    obj.poly_rgb(i_p,:)=obj.roads.list{ib}(ip,:);
-                    i_p=i_p+1;
+            for f=1:size(obj.roads.list,2)
+                i_p=1;
+                for ib=1:size(obj.roads.list{f},2)
+                    for ip=1:size(obj.roads.list{f}{ib},2)
+                        obj.poly_rgb(i_p,:,f)=obj.roads.list{f}{ib}(ip,:);
+                        i_p=i_p+1;
+                    end
                 end
             end
         end
@@ -78,15 +80,17 @@ classdef Sources < matlab.mixin.SetGet
             b=[23 177 23];
             c=[20 200 20];
             d=[20 200 20];
-            for i=1:size(obj.poly_los,1)
-                if ismember(a,obj.element_poly_rgb(i,:))
-                    obj.poly_los(i)='green_A';
-                elseif ismember(b,obj.element_poly_rgb(i,:))
-                    obj.poly_los(i)='yellow_B';
-                elseif ismember(c,obj.element_poly_rgb(i,:))
-                    obj.poly_los(i)='orange_C';
-                elseif ismember(d,obj.element_poly_rgb(i,:))
-                    obj.poly_los(i)='red_D';
+            for f=1:size(obj.roads.list,2)
+                for i=1:size(obj.poly_los,1)
+                    if ismember(a,obj.poly_rgb(i,:,f))
+                        obj.poly_los(i,f)='green_A';
+                    elseif ismember(b,obj.poly_rgb(i,:,f))
+                        obj.poly_los(i,f)='yellow_B';
+                    elseif ismember(c,obj.poly_rgb(i,:,f))
+                        obj.poly_los(i,f)='orange_C';
+                    elseif ismember(d,obj.poly_rgb(i,:,f))
+                        obj.poly_los(i,f)='red_D';
+                    end
                 end
             end
         end
@@ -102,8 +106,8 @@ classdef Sources < matlab.mixin.SetGet
                         obj.element_indexes(i_e)=obj.roads.elements_blocks{ib}{ip}(ie);
                         obj.element_poly_indexes(i_e)=obj.poly_indexes(i_p);
                         obj.element_poly_length(i_e)=obj.poly_length(i_p);
-                        obj.element_poly_rgb(i_e)=obj.poly_rgb(i_p);
-                        obj.element_poly_los(i_e)=obj.poly_los(i_p);
+                        obj.element_poly_rgb(i_e,:,:)=obj.poly_rgb(i_p,:,:);
+                        obj.element_poly_los(i_e)=obj.poly_los(i_p,:);
                         % check
                         if true && obj.element_indexes(i_e)==0
                             error('element indexes must be positive')
@@ -122,7 +126,11 @@ classdef Sources < matlab.mixin.SetGet
         end
         
         function set_element_em_factors(obj)
-            
+            for f=1:size(obj.element_poly_los,2)
+            for ie=1:length(obj.element_poly_los)
+                if ismember(obj.element_poly_los(ie,f),'green_A')
+                obj.element_em_factors(ie,f)=
+            end
         end
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

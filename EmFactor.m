@@ -11,17 +11,10 @@ classdef EmFactor < matlab.mixin.SetGet
         p_mopeds {mustBeInRange(p_mopeds,0,1)}=0.3
         p_trucks{mustBeInRange(p_trucks,0,1)}=0.08
         p_urban_buses{mustBeInRange(p_urban_buses,0,1)}=0.02
-        % vehicle flow in number of veh./h
-        f_los_a=420;
-        f_los_b=750;
-        f_los_c=1200;
-        f_los_d=1800;
     end
     
     methods
-        function em_factor(obj ,vals)
-            props = {'dt'};
-            obj.set(props, vals)
+        function em_factor(obj)
             obj.check_vehicle_probs()
         end
         function check_vehicle_probs(obj)

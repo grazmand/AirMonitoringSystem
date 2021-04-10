@@ -58,11 +58,11 @@ scenario.scenario({'dirichlet'});
 bc = BoundaryConditions;
 bc.boundary_conditions({scenario,mesh,boundary_counterclockwiseNodeIndexes});
 bc.checkBoundaryConditions(true)
-[street,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
 
 tlc1=false;
 %% handle road data
 if tlc1
+    [street,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
     roads=Roads;
     roads.structures({roads_poly,mesh})
     roads.set_rgb_list({List});
@@ -79,10 +79,9 @@ medium.medium({1.381e-9/dt.value})
 fem = FemModel;
 fem.fem_model({mesh,medium,bc})
 
-% ef=EmFactor;
-
-sources = Sources;
+sources = SourcesCO2;
 sources.sources({'road_sources',roads,mesh,fem})
+sources.sources_co2()
 sources.plot_sources(true)
 
 ft = ForceTerm;

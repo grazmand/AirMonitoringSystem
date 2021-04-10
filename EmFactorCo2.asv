@@ -9,12 +9,6 @@ classdef EmFactorCo2<EmFactor
         ef_los_d double {mustBeScalarOrEmpty}
     end
     methods
-        function set_ef_los_co2(obj)
-            obj.set_ef_los_a()
-            obj.set_ef_los_b()
-            obj.set_ef_los_c()
-            obj.set_ef_los_d()
-        end
         function set_ef_los_a(obj)
             Va=obj.v_los_a;
             p_pc=obj.p_passenger_cars;
@@ -22,38 +16,41 @@ classdef EmFactorCo2<EmFactor
             p_t=obj.p_trucks;
             p_ub=obj.p_urban_buses;
             % ef in g/Km
-            obj.ef_los_a=EmFactorCo2.set_ef_los(Va,p_pc,p_t,p_m,p_ub);
+            obj.ef_los_a=set_ef_los(Va,p_pc,p_t,p_m,p_ub);
         end
         function set_ef_los_b(obj)
+            % ef in g/Km
             Vb=obj.v_los_b;
             p_pc=obj.p_passenger_cars;
             p_m=obj.p_mopeds;
             p_t=obj.p_trucks;
             p_ub=obj.p_urban_buses;
             % ef in g/Km
-            obj.ef_los_b=EmFactorCo2.set_ef_los(Vb,p_pc,p_t,p_m,p_ub);
+            obj.ef_los_b=set_ef_los(Vb,p_pc,p_t,p_m,p_ub);
         end
         function set_ef_los_c(obj)
+            % ef in g/Km
             Vc=obj.v_los_c;
             p_pc=obj.p_passenger_cars;
             p_m=obj.p_mopeds;
             p_t=obj.p_trucks;
             p_ub=obj.p_urban_buses;
             % ef in g/Km
-            obj.ef_los_c=EmFactorCo2.set_ef_los(Vc,p_pc,p_t,p_m,p_ub);
+            obj.ef_los_c=set_ef_los(Vc,p_pc,p_t,p_m,p_ub);
         end
         function set_ef_los_d(obj)
+            % ef in g/Km
             Vd=obj.v_los_d;
             p_pc=obj.p_passenger_cars;
             p_m=obj.p_mopeds;
             p_t=obj.p_trucks;
             p_ub=obj.p_urban_buses;
             % ef in g/Km
-            obj.ef_los_d=EmFactorCo2.set_ef_los(Vd,p_pc,p_t,p_m,p_ub);
+            obj.ef_los_d=set_ef_los(Vd,p_pc,p_t,p_m,p_ub);
         end
     end
     
-    methods (Static)
+        methods (Static)
         function ef_los=set_ef_los(V,p_pc,p_t,p_m,p_ub)
             ef_los=p_pc*EmFactorCo2.set_ef_passenger_cars(V)+...
                 p_t*EmFactorCo2.set_ef_trucks(V)+...

@@ -5,7 +5,6 @@ classdef Sources < matlab.mixin.SetGet
         mesh Mesh
         fem FemModel
         coordinates string % NX2 array
-        em_factor EmFactor
         %% poly
         poly_indexes {mustBeInteger}
         poly_length double
@@ -30,15 +29,31 @@ classdef Sources < matlab.mixin.SetGet
         shapes double {mustBeInRange(shapes,0,1)}% (n_element_indexes)x(3)
         element_em_factors double
         element_em_rates double
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     end
-    
+    properties (Constant)
+        % vehicle flow in number of veh./h
+        f_los_a=420;
+        f_los_b=750;
+        f_los_c=1200;
+        f_los_d=1800;
+    end
     methods
         function sources(obj ,vals)
             props = {'name','roads','mesh','fem'};
             obj.set(props, vals)
+            obj.set_poly()
             obj.set_element_indexes()
+            obj.set_element_poly_multeplicity()
             obj.set_coordinates()
             obj.set_shapes()
+        end
+        
+        function set_poly(obj)
+            obj.set_poly_indexes()
+            obj.set_poly_length()
+            obj.set_poly_rgb()
+            obj.set_poly_los()
         end
         
         %% poly settings
@@ -123,10 +138,6 @@ classdef Sources < matlab.mixin.SetGet
             for ie=1:length(obj.element_poly_indexes)
                 obj.element_poly_multeplicity(ie)=length(find(obj.element_poly_indexes==obj.element_poly_indexes(ie)));
             end
-        end
-        
-        function set_element_em_factors(obj)
-            
         end
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
