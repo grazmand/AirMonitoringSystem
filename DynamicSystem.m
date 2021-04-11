@@ -7,7 +7,7 @@ classdef DynamicSystem  < matlab.mixin.SetGet
         stateInitialCondition double = 400 % u.m. in ppm - g/m^3;
         
         initial_state double
-        state double {mustBeNonnegative,mustBeNonNan}
+        state double {mustBeNonNan} % {mustbenonNegative} to add
     end
     
     methods

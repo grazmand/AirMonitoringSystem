@@ -5,7 +5,7 @@ classdef EmFactorCo2<EmFactor
     properties (SetAccess=private,GetAccess=public)
         ef_los_a double {mustBeScalarOrEmpty}
         ef_los_b double {mustBeScalarOrEmpty}
-        ef_loc_c double {mustBeScalarOrEmpty}
+        ef_los_c double {mustBeScalarOrEmpty}
         ef_los_d double {mustBeScalarOrEmpty}
     end
     methods

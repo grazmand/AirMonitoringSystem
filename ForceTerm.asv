@@ -8,7 +8,7 @@ classdef ForceTerm < matlab.mixin.SetGet
         k_frames {mustBeInteger}
     end
     properties (Constant)
-        i_frames double=[13] % frame indexes corresponding to when the traffic changes
+        i_frames double=[13] % frame indexes corresponding to when the traffic change
     end
     methods
         function forceTerm(obj, vals)
@@ -17,7 +17,7 @@ classdef ForceTerm < matlab.mixin.SetGet
             obj.set_k_frames()
         end
         function set_k_frames(obj)
-            obj.k_frames=obj.i_frames*3*60*obj.time.dt.value^-1;
+            obj.k_frames=obj.frames*3*60*obj.time.dt.value^-1;
         end
     end
 end

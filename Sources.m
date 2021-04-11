@@ -27,8 +27,6 @@ classdef Sources < matlab.mixin.SetGet
         element_poly_multeplicity {mustBeInteger}
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         shapes double {mustBeInRange(shapes,0,1)}% (n_element_indexes)x(3)
-        element_em_factors double
-        element_em_rates double
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     end
     properties (Constant)
@@ -82,7 +80,7 @@ classdef Sources < matlab.mixin.SetGet
             for f=1:size(obj.roads.list,2)
                 i_p=1;
                 for ib=1:size(obj.roads.list{f},2)
-                    for ip=1:size(obj.roads.list{f}{ib},2)
+                    for ip=1:size(obj.roads.list{f}{ib},1)
                         obj.poly_rgb(i_p,:,f)=obj.roads.list{f}{ib}(ip,:);
                         i_p=i_p+1;
                     end
@@ -91,20 +89,23 @@ classdef Sources < matlab.mixin.SetGet
         end
         
         function set_poly_los(obj)
-            a=[255 255 0];
-            b=[23 177 23];
-            c=[20 200 20];
-            d=[20 200 20];
-            for f=1:size(obj.roads.list,2)
-                for i=1:size(obj.poly_los,1)
+            a=[23 177 23]; % green
+            b=[255 255 0]; % yellow
+            c=[255 170 0]; % orange
+            d1=[200 0 0]; d2=[215 0 0]; % red
+            for f=1:size(obj.poly_rgb,3)
+                for i=1:size(obj.poly_rgb,1)
                     if ismember(a,obj.poly_rgb(i,:,f))
                         obj.poly_los(i,f)='green_A';
                     elseif ismember(b,obj.poly_rgb(i,:,f))
                         obj.poly_los(i,f)='yellow_B';
                     elseif ismember(c,obj.poly_rgb(i,:,f))
                         obj.poly_los(i,f)='orange_C';
-                    elseif ismember(d,obj.poly_rgb(i,:,f))
+                    elseif ismember(d1,obj.poly_rgb(i,:,f)) |...
+                        ismember(d2,obj.poly_rgb(i,:,f))
                         obj.poly_los(i,f)='red_D';
+                    else
+                        error('not other colorations are allowed')
                     end
                 end
             end
@@ -122,7 +123,7 @@ classdef Sources < matlab.mixin.SetGet
                         obj.element_poly_indexes(i_e)=obj.poly_indexes(i_p);
                         obj.element_poly_length(i_e)=obj.poly_length(i_p);
                         obj.element_poly_rgb(i_e,:,:)=obj.poly_rgb(i_p,:,:);
-                        obj.element_poly_los(i_e)=obj.poly_los(i_p,:);
+                        obj.element_poly_los(i_e,:)=obj.poly_los(i_p,:);
                         % check
                         if true && obj.element_indexes(i_e)==0
                             error('element indexes must be positive')

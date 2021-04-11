@@ -1,6 +1,8 @@
 classdef SourcesCO2 < Sources
     properties (SetAccess = private, GetAccess = public)
         ef EmFactorCo2
+        element_em_factors double
+        element_em_rates double
     end
     
     properties (Constant)
@@ -34,7 +36,7 @@ classdef SourcesCO2 < Sources
         function set_element_em_rates(obj)
             % em rates in (g*veh.)/(Km*h)
             for f=1:size(obj.element_em_factors,2)
-                for ie=1:length(obj.element_em_factors,1)
+                for ie=1:size(obj.element_em_factors,1)
                     if ismember(obj.element_poly_los(ie,f),'green_A')
                         obj.element_em_rates(ie,f)=obj.element_em_factors(ie,f)*obj.f_los_a;
                         % em rates in (g*veh.)/(m*sec)

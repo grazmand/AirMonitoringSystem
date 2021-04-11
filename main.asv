@@ -26,7 +26,7 @@ dt.time_discretization_step({1})
 
 %% time
 time = TimeT;
-time.time({100,dt})
+time.time({2000,dt})
 time.set_time
 
 %% load domain boundary
@@ -92,7 +92,7 @@ end
 
 ft = ForceTermCO2;
 ft.forceTerm({'FT',time,mesh})
-ft.setForceTerm({sources})
+ft.set
 
 ds = DynamicSystem;
 ds.dynamicSystem({fem,mesh,ft,400})
