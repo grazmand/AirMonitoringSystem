@@ -84,7 +84,7 @@ sources.sources({'road_sources',roads,mesh,fem})
 sources.sources_co2()
 sources.plot_sources(true)
 
-ft = ForceTerm;
+ft = ForceTermCO2;
 ft.forceTerm({'FT',sources,time,mesh})
 
 ds = DynamicSystem;
