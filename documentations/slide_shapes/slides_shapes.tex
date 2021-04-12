@@ -1,0 +1,48 @@
+\documentclass{beamer}
+\usetheme{Boadilla}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\graphicspath{{./images/}}
+\setbeamertemplate{caption}[numbered]
+
+\title{Air Quality Monitoring Wireless System}
+%\subtitle{Basics}
+\author{Graziano A. Manduzio, PhD student}
+\institute{University of Florence}
+\date{\today}
+
+%% new command
+\newcommand{\B}{\pmb{B}}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+	\center{supervisors: Giorgio Battistelli, Luigi Chisci and Nicola Forti}
+\end{frame}
+
+\begin{frame}
+Emission rate model
+\begin{equation}
+	E_i=\dfrac{e_if_i}{A_i}, i=1,...,N_e
+\end{equation}
+	where:\\
+	$ppm=gveh./m^3$ is the unit measure of pollutant concentration\\
+	$ut$ is the temporal unit\\
+	$N_e$ is the total number of source elements\\
+	$e_i$ is the emission factor of the $i$th element of the mesh, evaluated in $g/m$\\
+	$f_i$ is the vehicle flow of the $i$th element, evaluated in $veh./ut$\\
+	$A_i$ is the $i$th-element area, evaluated in $m^2$\\
+	$E_i$ is the emission rate of the $i$th element, evaluated in $ppm/ut$  
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+
+
+
+	
+
+	
