@@ -25,8 +25,8 @@ classdef ForceTermCO2 < ForceTerm
                 index=1;
                 for ie=obj.sources.element_indexes
                     nodes=obj.mesh.elements(1:3,ie);
-                    obj.force_term(nodes,time1) = obj.force_term(nodes,time1) + element_em_rates(index,1) * obj.sources.shapes(index,time1)';
-                    obj.force_term(nodes,time2) = obj.force_term(nodes,time2) + element_em_rates(index,frame) * obj.sources.shapes(index,time2)';
+                    obj.force_term(nodes,time1) = obj.force_term(nodes,time1) + element_em_rates(index,1) * obj.sources.shapes(index,:)';
+                    obj.force_term(nodes,time2) = obj.force_term(nodes,time2) + element_em_rates(index,frame) * obj.sources.shapes(index,:)';
                     index=index+1;
                 end
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -22,11 +22,11 @@ load('./decomposed geometry matrix/g.mat');
 
 %% dt
 dt = TimeDiscretizationStep;
-dt.time_discretization_step({1})
+dt.time_discretization_step({72})
 
 %% time
 time = TimeT;
-time.time({100,dt})
+time.time({7200,dt})
 time.set_time
 
 %% load domain boundary
@@ -98,18 +98,18 @@ ds = DynamicSystem;
 ds.dynamicSystem({fem,mesh,ft,400})
 ds.setState()
 
-disp(max(max(ds.state)))
-disp(min(min(ds.state)))
-
-%% dynamic field
-nodes_data_ds = ds.state;
-df = DynamicField;
-n_frame=30;
-df.dynamicField({nodes_data_ds,ds,time.time_steps(1),round((time.time_steps(end)-time.time_steps(1))/n_frame),time.time_steps(end),videoFolderName});
-df.plotField(true, true)
-VideoManager.videoMaker(videoFolderName, '*.png', 'field.avi', true);
-
 %% save data
-if false
+tlc3=false;
+if tlc3
     save(strcat(data_folder,'/data.mat'))
+end
+
+if false
+    %% dynamic field
+    nodes_data_ds = ds.state;
+    df = DynamicField;
+    n_frame=20;
+    df.dynamicField({nodes_data_ds,ds,time.time_steps(1),round((time.time_steps(end)-time.time_steps(1))/n_frame),time.time_steps(end),videoFolderName});
+    df.plotField(true, true)
+    VideoManager.videoMaker(videoFolderName, '*.png', 'field.avi', true);
 end

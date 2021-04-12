@@ -37,10 +37,10 @@ classdef DynamicField  < matlab.mixin.SetGet
                     caxis('auto');
                     colorbar();
                     colormap parula % cb styles : parula, hot.
-                    tit = sprintf('Dynamic System, time %0.1d [sec.]', k*obj.ds.ft.time.dt.value);
+                    tit = sprintf('carbon dioxide concentration [ppm], time %0.1d [sec.]', k*obj.ds.ft.time.dt.value);
                     title(tit)
-                    xlabel('range [m]', 'FontWeight', 'bold')
-                    ylabel('depth [m]', 'FontWeight', 'bold')
+                    xlabel('latitude [Kdeg]', 'FontWeight', 'bold')
+                    ylabel('longitude [Kdeg]', 'FontWeight', 'bold')
                     if bool2==true
                         if ismember(indexFig,1:9)
                             fileName = sprintf('%s/fig000%d.png', obj.folder, indexFig);
