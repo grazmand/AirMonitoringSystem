@@ -41,18 +41,26 @@ classdef SourcesCO2 < Sources
                         obj.element_em_rates(ie,f)=obj.element_em_factors(ie,f)*obj.f_los_a;
                         % em rates in (g*veh.)/(m*sec)
                         obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(1000*3600);
+                        % em rates in (g*veh.)/(m^3*sec)
+                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*1e4);
                     elseif ismember(obj.element_poly_los(ie,f),'yellow_B')
                         obj.element_em_rates(ie,f)=obj.element_em_factors(ie,f)*obj.f_los_b;
                         % em rates in (g*veh.)/(m*sec)
                         obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(1000*3600);
+                        % em rates in (g*veh.)/(m^3*sec)
+                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*1e4);
                     elseif ismember(obj.element_poly_los(ie,f),'orange_C')
                         obj.element_em_rates(ie,f)=obj.element_em_factors(ie,f)*obj.f_los_c;
                         % em rates in (g*veh.)/(m*sec)
                         obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(1000*3600);
+                        % em rates in (g*veh.)/(m^3*sec)
+                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*1e4);
                     elseif ismember(obj.element_poly_los(ie,f),'red_D')
                         obj.element_em_rates(ie,f)=obj.element_em_factors(ie,f)*obj.f_los_d;
                         % em rates in (g*veh.)/(m*sec)
                         obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(1000*3600);
+                        % em rates in (g*veh.)/(m^3*sec)
+                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*1e4);
                     end
                 end
             end

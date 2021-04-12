@@ -79,7 +79,7 @@ medium.medium({1.381e-9/dt.value})
 fem = FemModel;
 fem.fem_model({mesh,medium,bc})
 
-tlc2=false;
+tlc2=true;
 if tlc2
     sources = SourcesCO2;
     sources.sources({'road_sources',roads,mesh,fem})

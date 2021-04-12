@@ -15,6 +15,7 @@ classdef FemModel < matlab.mixin.SetGet
         stifnessMatrix_dirichlet
         
         shape_coefficients % is a [3 X 3 X elementSizeNumber] tensor
+        areas double
     end
     
     properties (Constant)
@@ -46,7 +47,7 @@ classdef FemModel < matlab.mixin.SetGet
             
             for ie = 1:obj.mesh.element_size_number
                 
-                [Me, Se, obj.shape_coefficients(:,:,ie)] = FemModel.set_coeff_shapes_and_local_matrices(ie, obj.mesh);
+                [Me, Se, obj.shape_coefficients(:,:,ie),obj.areas(ie)] = FemModel.set_coeff_shapes_and_local_matrices(ie, obj.mesh);
                 [M,S] = FemModel.build_global_fem_matrices(obj.medium.diffusion,M,S,...
                     ie,Me,Se,obj.mesh);
                 
@@ -93,14 +94,15 @@ classdef FemModel < matlab.mixin.SetGet
     end
     
     methods (Static)
-        function [massLocalMatrix, stifnessLocalMatrix, elementShapeCoefficients] = set_coeff_shapes_and_local_matrices(elementIndex, mesh)
+        function [massLocalMatrix, stifnessLocalMatrix, elementShapeCoefficients,elementArea] =...
+                set_coeff_shapes_and_local_matrices(elementIndex, mesh)
             elementNodeIndexes = mesh.elements(1:3,elementIndex);
             elementNodeCoordinates = mesh.node_coordinates(:,elementNodeIndexes)';
             %%%% elementNodeCoordinates è una matrice
             %%%% 3x2 in cui sono registrate le info sulle coordinate dei nodi delll'elemento ie.
             %%%% Nella prima colonna ci sono le coordinate delle ascisse. Nella seconda
             %%%% le ordinate.
-            [stifnessLocalMatrix, massLocalMatrix, elementShapeCoefficients] = FemModel.build_local_fem_matrices(elementNodeCoordinates);
+            [stifnessLocalMatrix, massLocalMatrix, elementShapeCoefficients,elementArea] = FemModel.build_local_fem_matrices(elementNodeCoordinates);
         end
         
         function [M,S] = build_global_fem_matrices(alpha,M,S,...
@@ -114,7 +116,7 @@ classdef FemModel < matlab.mixin.SetGet
                 S (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) + alpha * Se;
         end
         
-        function [Se,Te,Shape] = build_local_fem_matrices(XY)
+        function [Se,Te,Shape,A] = build_local_fem_matrices(XY)
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % Element is a first order tri
             %
