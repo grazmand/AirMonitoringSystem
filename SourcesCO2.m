@@ -34,6 +34,9 @@ classdef SourcesCO2 < Sources
             end
         end
         function set_element_em_rates(obj)
+            % conversion factor mdeg -> m
+            conv=110;
+            sq=conv^2;
             % em rates in (g*veh.)/(Km*h)
             for f=1:size(obj.element_em_factors,2)
                 for ie=1:size(obj.element_em_factors,1)
@@ -42,25 +45,25 @@ classdef SourcesCO2 < Sources
                         % em rates in (g*veh.)/(m*sec)
                         obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(1000*3600);
                         % em rates in (g*veh.)/(m^3*sec)
-                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*1e4);
+                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*sq);
                     elseif ismember(obj.element_poly_los(ie,f),'yellow_B')
                         obj.element_em_rates(ie,f)=obj.element_em_factors(ie,f)*obj.f_los_b;
                         % em rates in (g*veh.)/(m*sec)
                         obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(1000*3600);
                         % em rates in (g*veh.)/(m^3*sec)
-                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*1e4);
+                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*sq);
                     elseif ismember(obj.element_poly_los(ie,f),'orange_C')
                         obj.element_em_rates(ie,f)=obj.element_em_factors(ie,f)*obj.f_los_c;
                         % em rates in (g*veh.)/(m*sec)
                         obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(1000*3600);
                         % em rates in (g*veh.)/(m^3*sec)
-                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*1e4);
+                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*sq);
                     elseif ismember(obj.element_poly_los(ie,f),'red_D')
                         obj.element_em_rates(ie,f)=obj.element_em_factors(ie,f)*obj.f_los_d;
                         % em rates in (g*veh.)/(m*sec)
                         obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(1000*3600);
                         % em rates in (g*veh.)/(m^3*sec)
-                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*1e4);
+                        obj.element_em_rates(ie,f)=obj.element_em_rates(ie,f)/(obj.fem.areas(obj.element_indexes(ie))*sq);
                     end
                 end
             end

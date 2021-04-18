@@ -4,15 +4,16 @@ classdef ForceTerm < matlab.mixin.SetGet
         name string
         time TimeT
         mesh Mesh
+        corr double
         %% derivative
         k_frames {mustBeInteger}
     end
     properties (Constant)
-        i_frames double=[13] % frame indexes corresponding to when the traffic changes
+        i_frames double=[13] % frame indexes corresponding to the traffic changes
     end
     methods
         function forceTerm(obj, vals)
-            props = {'name','time','mesh'};
+            props = {'name','time','mesh','corr'};
             obj.set(props, vals)
             obj.set_k_frames()
         end

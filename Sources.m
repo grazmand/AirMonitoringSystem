@@ -35,6 +35,8 @@ classdef Sources < matlab.mixin.SetGet
         f_los_b=750;
         f_los_c=1200;
         f_los_d=1800;
+        % temporal frames
+        frames=[1 13];
     end
     methods
         function sources(obj ,vals)
@@ -77,13 +79,18 @@ classdef Sources < matlab.mixin.SetGet
         end
         
         function set_poly_rgb(obj)
+            i_frames=1;
+            
             for f=1:size(obj.roads.list,2)
-                i_p=1;
-                for ib=1:size(obj.roads.list{f},2)
-                    for ip=1:size(obj.roads.list{f}{ib},1)
-                        obj.poly_rgb(i_p,:,f)=obj.roads.list{f}{ib}(ip,:);
-                        i_p=i_p+1;
+                if ismember(f,obj.frames)
+                    i_p=1;
+                    for ib=1:size(obj.roads.list{f},2)
+                        for ip=1:size(obj.roads.list{f}{ib},1)
+                            obj.poly_rgb(i_p,:,i_frames)=obj.roads.list{f}{ib}(ip,:);
+                            i_p=i_p+1;
+                        end
                     end
+                    i_frames=i_frames+1;
                 end
             end
         end

@@ -26,7 +26,7 @@ dt.time_discretization_step({72})
 
 %% time
 time = TimeT;
-time.time({7200,dt})
+time.time({14000,dt})
 time.set_time
 
 %% load domain boundary
@@ -74,7 +74,8 @@ else
 end
 
 medium = Medium;
-medium.medium({1.381e-9/dt.value})
+d_factor=1e0;
+medium.medium({1.381e-9*d_factor/dt.value})
 
 fem = FemModel;
 fem.fem_model({mesh,medium,bc})
@@ -91,7 +92,8 @@ else
 end
 
 ft = ForceTermCO2;
-ft.forceTerm({'FT',time,mesh})
+corr=1e-6;
+ft.forceTerm({'FT',time,mesh,corr})
 ft.setForceTerm({sources})
 
 ds = DynamicSystem;
@@ -104,11 +106,11 @@ if tlc3
     save(strcat(data_folder,'/data.mat'))
 end
 
-if false
+if true
     %% dynamic field
     nodes_data_ds = ds.state;
     df = DynamicField;
-    n_frame=20;
+    n_frame=7;
     df.dynamicField({nodes_data_ds,ds,time.time_steps(1),round((time.time_steps(end)-time.time_steps(1))/n_frame),time.time_steps(end),videoFolderName});
     df.plotField(true, true)
     VideoManager.videoMaker(videoFolderName, '*.png', 'field.avi', true);
