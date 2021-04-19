@@ -140,6 +140,12 @@ classdef Mesh < matlab.mixin.SetGet
         function set_boundary_internal_node_indexes(obj)
             index=1;
             for ie=obj.boundary_element_indexes
+                for v=1:3
+                    if ~ismember(obj.elements(v,ie),obj.boundary_internal_node_indexes)
+                        obj.boundary_internal_node_indexes(index)=obj.elements(v,ie);
+                        index=index+1;
+                    end
+                end
             end
         end
     end

@@ -18,6 +18,9 @@ classdef BoundaryConditions < matlab.mixin.SetGet
             obj.mesh.set_boundary_conditions({obj, obj.boundary_counterclockwiseNodeIndexes})
             obj.set_boundary_conditions()
             obj.mesh.setInternalNodes()
+            obj.mesh.set_boundary_element_indexes()
+            obj.mesh.set_boundary_neighbor_element_indexes()
+            obj.mesh.set_boundary_internal_node_indexes()
         end
         
         function obj = set_boundary_conditions(obj)

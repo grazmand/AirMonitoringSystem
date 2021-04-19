@@ -91,7 +91,7 @@ else
     load('data/sources.mat')
 end
 
-ft = ForceTermCO2;
+ft = DynamicForceTermCO2;
 corr=1e0;
 ft.forceTerm({'FT',time,mesh,corr})
 ft.setForceTerm({sources})
