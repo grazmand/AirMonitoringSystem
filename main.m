@@ -92,7 +92,7 @@ else
 end
 
 ft = ForceTermCO2;
-corr=1e-6;
+corr=1e0;
 ft.forceTerm({'FT',time,mesh,corr})
 ft.setForceTerm({sources})
 

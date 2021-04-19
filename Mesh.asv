@@ -16,20 +16,19 @@ classdef Mesh < matlab.mixin.SetGet
         boundary_counterclockwiseNodeIndexes {mustBeInteger}
         boundary_counterclockwiseNodeCoordinates double
         bc BoundaryConditions
+        boundary_element_indexes {mustBeInteger}
+        boundary_neighbor_element_indexes {mustBeInteger}
+        boundary_internal_node_indexes {mustBeInteger}
         %% internal nodes
         allNodesExceptDirichletNodes_indexes {mustBeInteger}
         allNodesExceptDirichletNodes_coordinates double
         allNodesExceptDirichletNodes_size {mustBeInteger}
+        %% element centroids
+        element_centroids
     end
     
     methods
         %% boundary methods
-        function setCounterclockwiseBoundaryNodeIndexes(obj)
-            if ~isempty(obj.edges)
-                obj.set('boundary_counterclockwiseNodeIndexes', obj.);
-            end
-        end
-        
         function setCounterclockwiseBoundaryNodeCoordinates(obj)
             if ~isempty(obj.boundary_counterclockwiseNodeIndexes)
                 obj.set('boundary_counterclockwiseNodeCoordinates', obj.node_coordinates(:,obj.boundary_counterclockwiseNodeIndexes));
@@ -37,32 +36,12 @@ classdef Mesh < matlab.mixin.SetGet
         end
         
         function setBoundaries(obj)
-            obj.setCounterclockwiseBoundaryNodeIndexes();
             obj.setCounterclockwiseBoundaryNodeCoordinates();
         end
         
-        function checkBoundaries(obj,bool)
-            if bool
-                figure
-                hold on
-                plot(obj.s1_counterclockwiseNodeCoordinates(1,:),...
-                    obj.s1_counterclockwiseNodeCoordinates(2,:),'bo',...
-                    'MarkerSize',10)
-                plot(obj.s2_counterclockwiseNodeCoordinates(1,:),...
-                    obj.s2_counterclockwiseNodeCoordinates(2,:),'go')
-                plot(obj.s3_counterclockwiseNodeCoordinates(1,:),...
-                    obj.s3_counterclockwiseNodeCoordinates(2,:),'ro',...
-                    'MarkerSize',10)
-                plot(obj.s4_counterclockwiseNodeCoordinates(1,:),...
-                    obj.s4_counterclockwiseNodeCoordinates(2,:),'yo')
-                legend('s1','s2','s3','s4')
-                title('Boundaries')
-            end
-        end
-        
-        %% bc methods
+        %% bc method
         function set_boundary_conditions(obj, vals)
-            props = {'bc'};
+            props = {'bc','boundary_counterclockwiseNodeIndexes'};
             obj.set(props, vals)
             obj.setBoundaries()
         end
@@ -70,9 +49,9 @@ classdef Mesh < matlab.mixin.SetGet
         %% internal nodes methods
         function setInternalNodes(obj)
             if ~isempty(obj.bc)
-                obj.set('allNodesExceptDirichletNodes_indexes', setdiff(1:obj.nodeSizeNumber, obj.bc.dirichlet.counterclockwiseNodeIndexes));
+                obj.set('allNodesExceptDirichletNodes_indexes', setdiff(1:obj.node_size_number, obj.bc.dirichlet.counterclockwiseNodeIndexes));
                 obj.set('allNodesExceptDirichletNodes_size', length(obj.allNodesExceptDirichletNodes_indexes));
-                obj.set('allNodesExceptDirichletNodes_coordinates', obj.nodeCoordinates(:,obj.allNodesExceptDirichletNodes_indexes));
+                obj.set('allNodesExceptDirichletNodes_coordinates', obj.node_coordinates(:,obj.allNodesExceptDirichletNodes_indexes));
             elseif isempty(obj.bc)
                 error('boundary conditions missing');
             end
@@ -88,8 +67,9 @@ classdef Mesh < matlab.mixin.SetGet
             obj.set('node_coordinates',nd)
             obj.set('edges',ed)
             obj.set('elements',el)
-            obj.set_node_size_number
-            obj.set_element_size_number
+            obj.set_node_size_number()
+            obj.set_element_size_number()
+            obj.set_element_centroids()
             
             % plot mesh properties
             fprintf('----------------------------------------- \n');
@@ -124,6 +104,43 @@ classdef Mesh < matlab.mixin.SetGet
                 legend()
                 grid on
             end
+        end
+        
+        %% element centroid
+        function set_element_centroids(obj)
+            obj.element_centroids = zeros(obj.element_size_number,2);
+            for ie=1:obj.element_size_number
+                [obj.element_centroids(ie,1),obj.element_centroids(ie,2)] = FemTools.computeCentroid(obj.node_coordinates(1, obj.elements(1,ie)),obj.node_coordinates(1, obj.elements(2,ie)),obj.node_coordinates(1, obj.elements(3,ie)),...
+                    obj.node_coordinates(2, obj.elements(1,ie)), obj.node_coordinates(2, obj.elements(2,ie)), obj.node_coordinates(2, obj.elements(3,ie)));
+            end
+        end
+        
+        %% boundary elements
+        function set_boundary_element_indexes(obj)
+            index=1;
+            for in=obj.bc.boundary_counterclockwiseNodeIndexes
+                for ie=1:obj.element_size_number
+                    if ismember(in,obj.elements(:,ie))
+                        if ~ismember(ie,obj.boundary_element_indexes)
+                            obj.boundary_element_indexes(index)=ie;
+                            index=index+1;
+                        end
+                    end
+                end
+            end
+        end
+        
+        function set_boundary_neighbor_element_indexes(obj)
+            T=obj.elements;
+            TL=obj.boundary_element_indexes;
+            NTL=pdeent(T,TL);
+            obj.boundary_neighbor_element_indexes=NTL;
+        end
+        
+        function set_boundary_internal_node_indexes(obj)
+            index=1;
+            for ie=obj.boundary_element_indexes
+            end           
         end
     end
 end

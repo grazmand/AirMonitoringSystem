@@ -21,10 +21,7 @@ classdef BoundaryConditions < matlab.mixin.SetGet
         end
         
         function obj = set_boundary_conditions(obj)
-            if ismember(obj.scenario.boundary_condition, 'radiation')
-                obj.radiation = BoundaryCondition;
-                obj.radiation.boundary_condition({'radiation',obj.mesh,obj.scenario})
-            elseif ismember(obj.scenario.boundary_condition, 'dirichlet')
+            if ismember(obj.scenario.boundary_condition, 'dirichlet')
                 obj.dirichlet = BoundaryCondition;
                 obj.dirichlet.boundary_condition({'dirichlet',obj.mesh,obj.scenario})
             elseif ismember(obj.scenario.boundary_condition, 'neumann')
@@ -32,9 +29,8 @@ classdef BoundaryConditions < matlab.mixin.SetGet
                 obj.neumann.boundary_condition({'neumann',obj.mesh,obj.scenario})
             end
             
-            if ismember('radiation',obj.scenario.boundary_condition)
-                obj.radiation.set_boundary_condition_nodes;
-            elseif ismember('dirichlet',obj.scenario.boundary_condition)
+            
+            if ismember('dirichlet',obj.scenario.boundary_condition)
                 obj.dirichlet.set_boundary_condition_nodes;
             elseif ismember('neumann',obj.scenario.boundary_condition)
                 obj.neumann.set_boundary_condition_nodes;
@@ -45,9 +41,7 @@ classdef BoundaryConditions < matlab.mixin.SetGet
             if bool==true
                 figure
                 hold on
-                if ~isempty(obj.radiation)
-                    plot(obj.radiation.counterclockwiseNodeCoordinates(1,:),obj.radiation.counterclockwiseNodeCoordinates(2,:),'bo','DisplayName','radiation');
-                end
+                
                 if ~isempty(obj.dirichlet)
                     plot(obj.dirichlet.counterclockwiseNodeCoordinates(1,:),obj.dirichlet.counterclockwiseNodeCoordinates(2,:),'-ro','DisplayName','dirichlet',...
                         'LineWidth',0.5,'MarkerSize',3);

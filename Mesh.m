@@ -16,6 +16,9 @@ classdef Mesh < matlab.mixin.SetGet
         boundary_counterclockwiseNodeIndexes {mustBeInteger}
         boundary_counterclockwiseNodeCoordinates double
         bc BoundaryConditions
+        boundary_element_indexes {mustBeInteger}
+        boundary_neighbor_element_indexes {mustBeInteger}
+        boundary_internal_node_indexes {mustBeInteger}
         %% internal nodes
         allNodesExceptDirichletNodes_indexes {mustBeInteger}
         allNodesExceptDirichletNodes_coordinates double
@@ -109,6 +112,34 @@ classdef Mesh < matlab.mixin.SetGet
             for ie=1:obj.element_size_number
                 [obj.element_centroids(ie,1),obj.element_centroids(ie,2)] = FemTools.computeCentroid(obj.node_coordinates(1, obj.elements(1,ie)),obj.node_coordinates(1, obj.elements(2,ie)),obj.node_coordinates(1, obj.elements(3,ie)),...
                     obj.node_coordinates(2, obj.elements(1,ie)), obj.node_coordinates(2, obj.elements(2,ie)), obj.node_coordinates(2, obj.elements(3,ie)));
+            end
+        end
+        
+        %% boundary elements
+        function set_boundary_element_indexes(obj)
+            index=1;
+            for in=obj.bc.boundary_counterclockwiseNodeIndexes
+                for ie=1:obj.element_size_number
+                    if ismember(in,obj.elements(:,ie))
+                        if ~ismember(ie,obj.boundary_element_indexes)
+                            obj.boundary_element_indexes(index)=ie;
+                            index=index+1;
+                        end
+                    end
+                end
+            end
+        end
+        
+        function set_boundary_neighbor_element_indexes(obj)
+            T=obj.elements;
+            TL=obj.boundary_element_indexes;
+            NTL=pdeent(T,TL);
+            obj.boundary_neighbor_element_indexes=NTL;
+        end
+        
+        function set_boundary_internal_node_indexes(obj)
+            index=1;
+            for ie=obj.boundary_element_indexes
             end
         end
     end
