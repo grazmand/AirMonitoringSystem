@@ -91,13 +91,13 @@ else
     load('data/sources.mat')
 end
 
-ft = DynamicForceTermCO2;
+ft = ForceTermCO2;
 corr=1e0;
 ft.forceTerm({'FT',time,mesh,corr})
 ft.setForceTerm({sources})
 
 ds = DynamicSystem;
-ds.dynamicSystem({fem,mesh,ft,400})
+ds.dynamicSystem({fem,mesh,ft,400,'variable'})
 ds.setState()
 
 %% save data

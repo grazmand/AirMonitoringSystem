@@ -18,7 +18,6 @@ classdef Mesh < matlab.mixin.SetGet
         bc BoundaryConditions
         boundary_element_indexes {mustBeInteger}
         boundary_internal_node_cell_indexes cell
-        boundary_internal_node_array_indexes {mustBeInteger}
         %% internal nodes
         allNodesExceptDirichletNodes_indexes {mustBeInteger}
         allNodesExceptDirichletNodes_coordinates double
@@ -153,14 +152,9 @@ classdef Mesh < matlab.mixin.SetGet
             index=1;
             length1=size(obj.boundary_internal_node_cell_indexes,2);
             for i=1:length1
-                length2=size(obj.boundary_internal_node_cell_indexes{i},2);
-                for in=1:length2
-                    if ~ismember(obj.boundary_internal_node_cell_indexes{i}{in},obj.boundary_internal_node_array_indexes)
-                        obj.boundary_internal_node_array_indexes(index)=obj.boundary_internal_node_cell_indexes{i}{in};
-                        index=index+1;
-                    end
-                end
+                length2=size(obj.boundary_internal_node_cell_indexes,2);
             end
         end
+        
     end
 end
