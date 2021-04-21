@@ -37,8 +37,14 @@ classdef FemModel < matlab.mixin.SetGet
         
         function set_global_matrices(obj)
             
+            vel=obj.medium.advection_vector;
+            
             aned_nodes = obj.mesh.allNodesExceptDirichletNodes_indexes;
-            d_nodes = obj.boundaryConditions.dirichlet.counterclockwiseNodeIndexes;
+            if ~isempty(obj.boundaryConditions.dirichlet)
+                d_nodes=obj.boundaryConditions.dirichlet.counterclockwiseNodeIndexes;
+            else
+                d_nodes=[];
+            end
             
             obj.initialize_shape_coefficients()
             
@@ -47,9 +53,9 @@ classdef FemModel < matlab.mixin.SetGet
             
             for ie = 1:obj.mesh.element_size_number
                 
-                [Me, Se, obj.shape_coefficients(:,:,ie),obj.areas(ie)] = FemModel.set_coeff_shapes_and_local_matrices(ie, obj.mesh);
+                [Me,Se,SVe,obj.shape_coefficients(:,:,ie),obj.areas(ie)] = FemModel.set_coeff_shapes_and_local_matrices(ie,obj.mesh,vel);
                 [M,S] = FemModel.build_global_fem_matrices(obj.medium.diffusion,M,S,...
-                    ie,Me,Se,obj.mesh);
+                    ie,Me,Se,SVe,obj.mesh);
                 
             end
             
@@ -94,29 +100,29 @@ classdef FemModel < matlab.mixin.SetGet
     end
     
     methods (Static)
-        function [massLocalMatrix, stifnessLocalMatrix, elementShapeCoefficients,elementArea] =...
-                set_coeff_shapes_and_local_matrices(elementIndex, mesh)
+        function [massLocalMatrix,stifnessLocalMatrix,SVe,elementShapeCoefficients,elementArea] =...
+                set_coeff_shapes_and_local_matrices(elementIndex,mesh,vel)
             elementNodeIndexes = mesh.elements(1:3,elementIndex);
             elementNodeCoordinates = mesh.node_coordinates(:,elementNodeIndexes)';
             %%%% elementNodeCoordinates è una matrice
             %%%% 3x2 in cui sono registrate le info sulle coordinate dei nodi delll'elemento ie.
             %%%% Nella prima colonna ci sono le coordinate delle ascisse. Nella seconda
             %%%% le ordinate.
-            [stifnessLocalMatrix, massLocalMatrix, elementShapeCoefficients,elementArea] = FemModel.build_local_fem_matrices(elementNodeCoordinates);
+            [stifnessLocalMatrix,massLocalMatrix,SVe,elementShapeCoefficients,elementArea] = FemModel.build_local_fem_matrices(elementNodeCoordinates,vel);
         end
         
         function [M,S] = build_global_fem_matrices(alpha,M,S,...
-                ie,Me,Se,mesh)
+                ie,Me,Se,SVe,mesh)
             %%%% ------------ build mass matrix
             M (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) =...
                 M (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) + Me;
             
             %%%% ------------ build stifness matrix
             S (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) =...
-                S (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) + alpha * Se;
+                S (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) + SVe;%alpha * Se + SVe;
         end
         
-        function [Se,Te,Shape,A] = build_local_fem_matrices(XY)
+        function [Se,Te,SVe,Shape,A] = build_local_fem_matrices(XY,vel)
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % Element is a first order tri
             %
@@ -134,6 +140,9 @@ classdef FemModel < matlab.mixin.SetGet
             Dy(2) =  XY(3,2) - XY(1,2);
             Dy(3) =  XY(1,2) - XY(2,2);
             
+            GN = [Dy(1) Dy(2) Dy(3); Dx(1) Dx(2) Dx(3)]; % 2x3 matrix
+            SVe = [vel; vel; vel]*GN*(1/6);
+            
             % New: Shape functions
             
             a(1)=XY(2,1)*XY(3,2)-XY(3,1)*XY(2,2);
@@ -141,6 +150,8 @@ classdef FemModel < matlab.mixin.SetGet
             a(3)=XY(1,1)*XY(2,2)-XY(2,1)*XY(1,2);
             
             Shape = [a;Dy;Dx]/(2*A);
+            
+            %
             % 3x3_size shape function coefficients matrix
             % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             %

@@ -74,7 +74,7 @@ else
 end
 
 medium = Medium;
-d_factor=1e0;
+d_factor=1e-2;
 medium.medium({1.381e-9*d_factor/dt.value})
 
 fem = FemModel;
@@ -92,7 +92,7 @@ else
 end
 
 ft = ForceTermCO2;
-corr=1e0;
+corr=1e-8;
 ft.forceTerm({'FT',time,mesh,corr})
 ft.setForceTerm({sources})
 
