@@ -119,7 +119,7 @@ classdef FemModel < matlab.mixin.SetGet
             
             %%%% ------------ build stifness matrix
             S (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) =...
-                S (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) + SVe;%alpha * Se + SVe;
+                S (mesh.elements(1:3,ie), mesh.elements(1:3,ie)) + alpha * Se + SVe;
         end
         
         function [Se,Te,SVe,Shape,A] = build_local_fem_matrices(XY,vel)

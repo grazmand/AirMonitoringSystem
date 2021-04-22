@@ -22,12 +22,12 @@ dt.time_discretization_step({0.01})
 
 %% time
 time = TimeT;
-time.time({3,dt})
+time.time({6,dt})
 time.set_time
 
 %% domain
 domain=RectangularDomain;
-domain.rec_domain({-30,50,-50,50})
+domain.rec_domain({-50,50,-50,50})
 domain.plot_domain(true)
 
 %% mesh
@@ -37,7 +37,7 @@ mesh.plot_mesh(true)
 
 %% scenario
 scenario = Scenario;
-scenario.scenario({'neumann'})
+scenario.scenario({'dirichlet'})
 
 %% bc
 bc = RectangularDomainBoundaryConditions;
@@ -47,7 +47,7 @@ bc.checkBoundaryConditions(true)
 %% medium
 medium = Medium;
 d_factor=1e0;
-medium.medium({0,[10 0]})
+medium.medium({1e-1,[0 10]})
 
 %% fen model
 fem = RectangularDomainFemModel;
@@ -58,7 +58,12 @@ ds = RectangularDomainDynamicSystem;
 ds.dynamicSystem({time,fem,mesh,0,'gaussian','static'})
 ds.setState()
 
-if true
+%% sensor
+s1 = Sensor;
+s1.setProperties({'s1',time,0,-49,mesh,ds});
+s1.viewSignalForm(true);
+
+if false
     %% dynamic field
     nodes_data_ds = ds.state;
     df = RectangularDomainDynamicField;

@@ -9,7 +9,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
         initial_state_type string % 'constant', 'gaussian'
         
         initial_state double
-        state double {mustBeNonNan} % {mustbenonNegative} to add
+        state double {mustBeNonNan}
     end
     
     methods
@@ -21,7 +21,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
         end
         
         function setInitialState(obj)
-            if ismember('constant',obj.dirichlet_type)
+            if ismember('constant',obj.initial_state_type)
                 n_nodes = obj.mesh.node_size_number;
                 anedn_indexes = obj.mesh.allNodesExceptDirichletNodes_indexes;
                 if ~isempty(obj.mesh.bc.dirichlet)
@@ -32,7 +32,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                 obj.initial_state = zeros(n_nodes, 1);
                 obj.initial_state(anedn_indexes) = obj.stateInitialCondition;
                 obj.initial_state(dirichlet_indexes) = obj.dirichletValue;
-            elseif ismember('gaussian',obj.dirichlet_type)
+            elseif ismember('gaussian',obj.initial_state_type)
                 n_nodes = obj.mesh.node_size_number;
                 anedn_indexes = obj.mesh.allNodesExceptDirichletNodes_indexes;
                 if ~isempty(obj.mesh.bc.dirichlet)
@@ -41,8 +41,13 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                     dirichlet_indexes=[];
                 end
                 obj.initial_state = zeros(n_nodes, 1);
-                for in=anedn_indexes
-                obj.initial_state(in) = exp;
+                for in=1:length(anedn_indexes)
+                    x=obj.mesh.allNodesExceptDirichletNodes_coordinates(1,in);
+                    y=obj.mesh.allNodesExceptDirichletNodes_coordinates(2,in);
+                    r=sqrt(x^2+y^2);
+                    sigma=6;
+                    
+                    obj.initial_state(in) = (r<=20)*exp(-((x^2/sigma^2)+(y^2/sigma^2)))+0*(r>20);
                 end
                 obj.initial_state(dirichlet_indexes) = obj.dirichletValue;
             end
@@ -71,7 +76,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
             end
             indexProgress = 1;
             
-            for k=t_steps(1:end-1)
+            for k=t_steps(1:end)
                 if k>=round(length(t_steps)/10)*indexProgress
                     fprintf(' %d/%d ',indexProgress,min(length(t_steps),10));
                     indexProgress = indexProgress + 1;
@@ -80,13 +85,13 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 obj.state(anedn_indexes,k)=x0;
+                obj.state(obj.mesh.boundary_counterclockwiseNodeIndexes,k)=...
+                    zeros(size(obj.mesh.boundary_counterclockwiseNodeIndexes));
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 [x1]=RectangularDomainDynamicSystem.dynamicSystemSimulator(x0,...
                     obj.fem.massMatrix_allNodesExceptDirichletNodes,...
                     obj.fem.stifnessMatrix_allNodesExceptDirichletNodes,...
-                    x_1_d,...
-                    x_0_d,...
                     delta);
                 
                 x0 = x1;
@@ -136,17 +141,18 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
         function[x_1]=dynamicSystemSimulator(x_0,...
                 M_aned,...
                 S_aned,...
-                M_d,...
-                S_d,...
                 delta)
             
             % forward euler
-            DM_aned = M_aned/delta;
+            DM_aned = M_aned;
             DS_aned = S_aned;
-            DM_d = M_d/delta;
-            DS_d = S_d;
-            
-            x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0);
+            D=0.5*(DM_aned\DS_aned);
+            D1=eye(size(D))+D;
+            D2=eye(size(D))-D;
+            D=D1
+%             D=-delta*DM_aned\DS_aned;
+           
+            x_1 = x_0+D*x_0;
         end
     end
 end

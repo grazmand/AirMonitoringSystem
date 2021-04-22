@@ -9,7 +9,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
         initial_state_type string % 'constant', 'gaussian'
         
         initial_state double
-        state double {mustBeNonNan} 
+        state double {mustBeNonNan}
     end
     
     methods
@@ -44,8 +44,10 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                 for in=1:length(anedn_indexes)
                     x=obj.mesh.allNodesExceptDirichletNodes_coordinates(1,in);
                     y=obj.mesh.allNodesExceptDirichletNodes_coordinates(2,in);
+                    r=sqrt(x^2+y^2);
                     sigma=6;
-                    obj.initial_state(in) = exp(-((x^2/sigma^2)+(y^2/sigma^2)));
+                    
+                    obj.initial_state(in) = (r<=20)*exp(-((x^2/sigma^2)+(y^2/sigma^2)))+0*(r>20);
                 end
                 obj.initial_state(dirichlet_indexes) = obj.dirichletValue;
             end
@@ -74,7 +76,20 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
             end
             indexProgress = 1;
             
-            for k=t_steps(1:end-1)
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+            M_aned=obj.fem.massMatrix_allNodesExceptDirichletNodes;
+            S_aned=obj.fem.stifnessMatrix_allNodesExceptDirichletNodes;
+            
+            D=0.5*(M_aned\S_aned);
+            D=((eye(size(D))+delta*D)\...
+                (eye(size(D))-delta*D));
+            
+            clear M_aned S_aned
+                     
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+            for k=t_steps(1:end)
                 if k>=round(length(t_steps)/10)*indexProgress
                     fprintf(' %d/%d ',indexProgress,min(length(t_steps),10));
                     indexProgress = indexProgress + 1;
@@ -83,12 +98,10 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 obj.state(anedn_indexes,k)=x0;
+                obj.state(obj.mesh.boundary_counterclockwiseNodeIndexes,k)=...
+                    zeros(size(obj.mesh.boundary_counterclockwiseNodeIndexes));
                 
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                [x1]=RectangularDomainDynamicSystem.dynamicSystemSimulator(x0,...
-                    obj.fem.massMatrix_allNodesExceptDirichletNodes,...
-                    obj.fem.stifnessMatrix_allNodesExceptDirichletNodes,...
-                    delta);
+                [x1]=RectangularDomainDynamicSystem.dynamicSystemSimulator(x0,D);
                 
                 x0 = x1;
                 obj.state(anedn_indexes,k+1) = x1;
@@ -135,15 +148,12 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
     
     methods(Static)
         function[x_1]=dynamicSystemSimulator(x_0,...
-                M_aned,...
-                S_aned,...
-                delta)
+                D)
             
-            % forward euler
-            DM_aned = M_aned/delta;
-            DS_aned = S_aned;
+            %             forward euler
+            %             D=-delta*DM_aned\DS_aned;
             
-            x_1 = x_0 - DM_aned\(DS_aned * x_0);
+            x_1 = D*x_0;
         end
     end
 end
