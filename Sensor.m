@@ -61,7 +61,7 @@ classdef Sensor < matlab.mixin.SetGet
         function viewSignalForm(obj,bool)
             if bool==true
                 figure
-                plot(1:length(obj.time.times), obj.signalForm(1:end-1),'-rx')
+                plot(1:length(obj.time.times), obj.signalForm(1:end),'-rx')
                 tit = sprintf('%s signalform', obj.name);
                 xlabel('time steps')
                 title(tit)

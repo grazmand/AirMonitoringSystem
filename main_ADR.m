@@ -60,7 +60,7 @@ ds.setState()
 
 %% sensor
 s1 = Sensor;
-s1.setProperties({'s1',time,0,-49,mesh,ds});
+s1.setProperties({'s1',time,0,-50,mesh,ds});
 s1.viewSignalForm(true);
 
 if false

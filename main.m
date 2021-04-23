@@ -52,7 +52,7 @@ run('check_boundary_alignment.m')
 
 %% scenario
 scenario = Scenario;
-scenario.scenario({'dirichlet'});
+scenario.scenario({'neumann'});
 
 %% bc
 bc = BoundaryConditions;
