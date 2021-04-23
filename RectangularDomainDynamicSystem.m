@@ -2,6 +2,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
     properties (SetAccess = private, GetAccess = public)
         fem RectangularDomainFemModel
         mesh RectangularDomainMesh
+        ft StaticSingleSourceForceTerm
         time TimeT
         dirichletValue double = 0 % u.m. in ppm - g/m^3;
         stateInitialCondition double = 0 % u.m. in ppm - g/m^3;
@@ -15,7 +16,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
     methods
         
         function dynamicSystem(obj, vals)
-            props = {'time','fem','mesh','stateInitialCondition',...
+            props = {'time','fem','mesh','ft','stateInitialCondition',...
                 'initial_state_type','dirichlet_type'};
             obj.set(props, vals)
         end
@@ -44,7 +45,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                     x=obj.mesh.allNodesExceptDirichletNodes_coordinates(1,in);
                     y=obj.mesh.allNodesExceptDirichletNodes_coordinates(2,in);
                     r=sqrt(x^2+y^2);
-                    sigma=6;                  
+                    sigma=6;
                     obj.initial_state(anedn_indexes(in)) = (r<=20)*exp(-((x^2/sigma^2)+(y^2/sigma^2)))+0*(r>20);
                 end
                 obj.initial_state(dirichlet_indexes) = obj.dirichletValue;
@@ -84,6 +85,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
             S_aned=obj.fem.stifnessMatrix_allNodesExceptDirichletNodes;
             M_d=obj.fem.massMatrix_dirichlet;
             S_d=obj.fem.stifnessMatrix_dirichlet;
+            f=obj.ft.force_term;
             
             %             D=0.5*(M_aned\S_aned);
             %             D=((eye(size(D))+delta*D)\...
@@ -111,15 +113,16 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                 %                 obj.state(obj.mesh.boundary_counterclockwiseNodeIndexes,k)=...
                 %                     zeros(size(obj.mesh.boundary_counterclockwiseNodeIndexes));
                 if ~isempty(obj.mesh.bc.dirichlet)
-                    [x1]=RectangularDomainDynamicSystem.dynamicSystemSimulator(x0,DM_aned,DS_aned,DM_d,DS_d,x_1_d,x_0_d);
+                    [x1]=RectangularDomainDynamicSystem.dynamicSystemSimulator(x0,DM_aned,DS_aned,DM_d,DS_d,x_1_d,x_0_d,...
+                        f(anedn_indexes,k));
                 else
                     [x1]=RectangularDomainDynamicSystem.dynamicSystemSimulator(x0,DM_aned,DS_aned);
                 end
                 x0 = x1;
                 obj.state(anedn_indexes,k) = x1;
                 obj.state(dirichlet_indexes,k)=x_1_d;
-%                                                 obj.state(obj.mesh.boundary_counterclockwiseNodeIndexes,k)=...
-%                                                     zeros(size(obj.mesh.boundary_counterclockwiseNodeIndexes));
+                %                                                 obj.state(obj.mesh.boundary_counterclockwiseNodeIndexes,k)=...
+                %                                                     zeros(size(obj.mesh.boundary_counterclockwiseNodeIndexes));
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
@@ -163,7 +166,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
     
     methods(Static)
         function[x_1]=dynamicSystemSimulator(x_0,...
-                DM_aned,DS_aned,DM_d,DS_d,x_1_d,x_0_d)
+                DM_aned,DS_aned,DM_d,DS_d,x_1_d,x_0_d,f)
             % overloaded function
             if nargin==7
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -171,6 +174,8 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                 %             x_1 = D*x_0;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0); % - DM_d * x_1_d + DM_d * x_0_d -DS_d * x_0_d);
+            elseif nargin==8
+                x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0 + f);
             elseif nargin==3
                 x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0);
             end

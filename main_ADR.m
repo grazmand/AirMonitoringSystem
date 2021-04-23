@@ -22,7 +22,7 @@ dt.time_discretization_step({0.01})
 
 %% time
 time = TimeT;
-time.time({6,dt})
+time.time({12,dt})
 time.set_time
 
 %% domain
@@ -32,7 +32,8 @@ domain.plot_domain(true)
 
 %% mesh
 mesh=RectangularDomainMesh;
-mesh.mesh({'mesh',1,domain})
+mesh.mesh({'mesh',2,domain})
+% good elementh length for analytical solution is 1 m
 mesh.plot_mesh(true)
 
 %% scenario
@@ -53,21 +54,30 @@ medium.medium({2,[2 2]})
 fem = RectangularDomainFemModel;
 fem.fem_model({mesh,medium,bc})
 
+%% source
+source=ImpulsiveSource;
+source.source({'source','static',time,1,0,0,fem});
+source.checkWaveForm(true)
+
+%% force term
+ft=StaticSingleSourceForceTerm;
+ft.source_force_term({'ft',source})
+
 %% dynamic system
-ds = RectangularDomainDynamicSystem;
-ds.dynamicSystem({time,fem,mesh,0,'gaussian','static'})
+ds=RectangularDomainDynamicSystem;
+ds.dynamicSystem({time,fem,mesh,ft,0,'constant','static'})
 ds.setState()
 
 %% sensor
-s1 = Sensor;
+s1=Sensor;
 s1.setProperties({'s1',time,0,0,mesh,ds});
 s1.viewSignalForm(true);
 
+%% dynamic field
 if false
-    %% dynamic field
     nodes_data_ds = ds.state;
     df = RectangularDomainDynamicField;
-    n_frame=5;
+    n_frame=15;
     df.dynamicField({nodes_data_ds,ds,time.time_steps(1),round((time.time_steps(end)-time.time_steps(1))/n_frame),time.time_steps(end),videoFolderName});
     df.plotField(true, true)
     VideoManager.videoMaker(videoFolderName, '*.png', 'field.avi', true);
