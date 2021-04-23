@@ -32,7 +32,7 @@ domain.plot_domain(true)
 
 %% mesh
 mesh=RectangularDomainMesh;
-mesh.mesh({'mesh',2.5,domain})
+mesh.mesh({'mesh',1,domain})
 mesh.plot_mesh(true)
 
 %% scenario
@@ -47,7 +47,7 @@ bc.checkBoundaryConditions(true)
 %% medium
 medium = Medium;
 d_factor=1e0;
-medium.medium({1e-1,[0 10]})
+medium.medium({2,[2 2]})
 
 %% fen model
 fem = RectangularDomainFemModel;
@@ -60,7 +60,7 @@ ds.setState()
 
 %% sensor
 s1 = Sensor;
-s1.setProperties({'s1',time,0,-50,mesh,ds});
+s1.setProperties({'s1',time,0,0,mesh,ds});
 s1.viewSignalForm(true);
 
 if false
