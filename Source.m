@@ -55,7 +55,7 @@ classdef Source  < matlab.mixin.SetGet
         function set_source_wave_form(obj)
             if ismember('impulsive',obj.wave_form_type)
                 omega=2*pi*obj.frequency;
-                peak=1.5;
+                peak=3;
                 dt=obj.time.dt.value;
                 time_steps=obj.time.time_steps;
                 wf=(1-omega^2/2*((time_steps *dt)-peak).^2 ).* exp(-omega^2*((obj.time.time_steps*dt)-peak).^2/4);

@@ -26,7 +26,7 @@ dt.time_discretization_step({0.01})
 
 %% time
 time = TimeT;
-time.time({3,dt})
+time.time({10,dt})
 time.set_time
 
 %% load domain boundary
@@ -82,7 +82,7 @@ bc.checkBoundaryConditions(true)
 medium=Medium;
 d_factor=1e0;
 % medium.medium({d_factor*0.1381*10^-4,[10 0]})
-medium.medium({0,[0 -100]})
+medium.medium({0,[0 -20]})
 
 %% fem model
 fem = FemModel;
@@ -109,7 +109,7 @@ fem.fem_model({mesh,medium,bc})
 
 %% source
 source=ImpulsiveSource;
-source.source({'source','static',time,1,0,0,fem});
+source.source({'source','static',time,0.5,0,0,fem});
 source.checkWaveForm(true)
 
 %% force term
@@ -140,7 +140,7 @@ if true
     %% dynamic field
     nodes_data_ds = ds.state;
     df = DynamicField;
-    n_frame=7;
+    n_frame=10;
     df.dynamicField({nodes_data_ds,ds,time.time_steps(1),round((time.time_steps(end)-time.time_steps(1))/n_frame),time.time_steps(end),videoFolderName});
     df.plotField(true, true)
     VideoManager.videoMaker(videoFolderName, '*.png', 'field.avi', true);

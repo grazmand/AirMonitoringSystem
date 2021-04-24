@@ -22,11 +22,11 @@ load('./decomposed geometry matrix/g.mat');
 
 %% dt
 dt = TimeDiscretizationStep;
-dt.time_discretization_step({1})
+dt.time_discretization_step({0.01})
 
 %% time
 time = TimeT;
-time.time({100,dt})
+time.time({10,dt})
 time.set_time
 
 %% load domain boundary
@@ -48,7 +48,7 @@ domain.plot_domain(true)
 
 %% mesh
 mesh=Mesh;
-mesh.mesh({'mesh',10,domain})
+mesh.mesh({'mesh',1,domain})
 mesh.plot_mesh(true)
 
 %% set boundaries
@@ -64,24 +64,27 @@ bc=BoundaryConditions;
 bc.boundary_conditions({scenario,mesh});
 bc.checkBoundaryConditions(true)
 
-tlc1=false;
-%% handle road data
-if tlc1
-    [street,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
-    roads=Roads;
-    roads.structures({roads_poly,mesh})
-    roads.set_rgb_list({List});
-    roads.set_long_max({street.long_max});
-    roads.plot_blocks(true)
-    save('data/roads.mat','roads')
-else
-    load('data/roads.mat')
-end
+% tlc1=false;
+% %% handle road data
+% if tlc1
+%     [street,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
+%     roads=Roads;
+%     roads.structures({roads_poly,mesh})
+%     roads.set_rgb_list({List});
+%     roads.set_long_max({street.long_max});
+%     roads.plot_blocks(true)
+%     save('data/roads.mat','roads')
+% else
+%     load('data/roads.mat')
+% end
 
-medium = Medium;
-d_factor=1e-6;
-medium.medium({d_factor*0.1381*10^-4,[10 0]})
+%% medium
+medium=Medium;
+d_factor=1e0;
+% medium.medium({d_factor*0.1381*10^-4,[10 0]})
+medium.medium({0,[0 -20]})
 
+%% fem model
 fem = FemModel;
 fem.fem_model({mesh,medium,bc})
 
@@ -133,7 +136,7 @@ if tlc3
     save(strcat(data_folder,'/data.mat'))
 end
 
-if false
+if true
     %% dynamic field
     nodes_data_ds = ds.state;
     df = DynamicField;
