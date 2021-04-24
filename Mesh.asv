@@ -78,6 +78,10 @@ classdef Mesh < matlab.mixin.SetGet
             obj.set_element_size_number()
             obj.set_element_centroids()
             
+            % boundaries
+            obj.set_boundary_counterclockwiseNodeIndexes()
+            obj.setCounterclockwiseBoundaryNodeCoordinates()
+            
             % plot mesh properties
             fprintf('----------------------------------------- \n');
             fprintf('%s res. = %d m \n',obj.name,obj.element_length);
@@ -109,19 +113,13 @@ classdef Mesh < matlab.mixin.SetGet
         % boundaries
         function set_boundary_counterclockwiseNodeIndexes(obj,bci)
             % obj.boundary_counterclockwiseNodeIndexes=obj.edges(1,:);
-            obj.set({'boundary_counterclockwiseNodeIndexes'},bci)
+            set({'boundary_counterclockwiseNodeIndexes'},bci)
         end
         
         function setCounterclockwiseBoundaryNodeCoordinates(obj)
             if ~isempty(obj.boundary_counterclockwiseNodeIndexes)
                 obj.set('boundary_counterclockwiseNodeCoordinates', obj.node_coordinates(:,obj.boundary_counterclockwiseNodeIndexes));
             end
-        end
-        
-        function set_boundaries(obj,bci)
-            % boundaries
-            obj.set_boundary_counterclockwiseNodeIndexes(bci)
-            obj.setCounterclockwiseBoundaryNodeCoordinates()
         end
         
         %% bc method

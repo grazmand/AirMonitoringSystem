@@ -81,7 +81,11 @@ classdef FemModel < matlab.mixin.SetGet
             n_nodes=obj.mesh.node_size_number;
             aned_nodes=obj.mesh.allNodesExceptDirichletNodes_indexes;
             n_aned_nodes=length(aned_nodes);
-            d_nodes=obj.boundaryConditions.dirichlet.counterclockwiseNodeIndexes;
+            if ~isempty(obj.boundaryConditions.dirichlet)
+                d_nodes=obj.boundaryConditions.dirichlet.counterclockwiseNodeIndexes;
+            else
+                d_nodes=[];
+            end
             n_d_nodes=length(d_nodes);
             
             obj.massMatrix = sparse(zeros(n_nodes, n_nodes));

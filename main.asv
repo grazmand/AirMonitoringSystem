@@ -39,7 +39,7 @@ load('./borders/coordinates_data.mat');
 border_coordinates = Mesh_Boundaries_Coordinates';
 
 % coordinates in m
-border_coordinates=border_coordinates*110;
+border_coordinates
 
 %% domain
 domain = Domain;
@@ -51,17 +51,16 @@ mesh=Mesh;
 mesh.mesh({'mesh',10,domain})
 mesh.plot_mesh(true)
 
-%% set boundaries
+%% check boundaries alignment
 run('check_boundary_alignment.m')
-mesh.set_boundaries({boundary_counterclockwiseNodeIndexes})
 
 %% scenario
 scenario = Scenario;
 scenario.scenario({'neumann'});
 
 %% bc
-bc=BoundaryConditions;
-bc.boundary_conditions({scenario,mesh});
+bc = BoundaryConditions;
+bc.boundary_conditions({scenario,mesh,boundary_counterclockwiseNodeIndexes});
 bc.checkBoundaryConditions(true)
 
 tlc1=false;
@@ -79,7 +78,7 @@ else
 end
 
 medium = Medium;
-d_factor=1e0;
+d_factor=1e-2;
 medium.medium({d_factor*0.1381*10^-4,[10 0]})
 
 fem = FemModel;
@@ -87,7 +86,7 @@ fem.fem_model({mesh,medium,bc})
 
 tlc2=true;
 if tlc2
-    sources=SourcesCO2;
+    sources = SourcesCO2;
     sources.sources({'road_sources',roads,mesh,fem})
     sources.sources_co2()
     sources.plot_sources(true)
@@ -96,12 +95,12 @@ else
     load('data/sources.mat')
 end
 
-ft=ForceTermCO2;
-corr=1e0;
+ft = ForceTermCO2;
+corr=1e-8;
 ft.forceTerm({'FT',time,mesh,corr})
 ft.setForceTerm({sources})
 
-ds=DynamicSystem;
+ds = DynamicSystem;
 ds.dynamicSystem({fem,mesh,ft,400,'variable'})
 ds.setState()
 

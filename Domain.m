@@ -28,11 +28,11 @@ classdef Domain < matlab.mixin.SetGet
             if bool
                 figure
                 plot(obj.coordinates(:,1),...
-                    obj.coordinates(:,2), 'ro','MarkerSize',3,'DisplayName','coordinates')
+                    obj.coordinates(:,2), 'ro','MarkerSize',3,'DisplayName','domain coordinates')
                 axes = gca;
                 set(axes,'FontWeight','bold')
-                xlabel('latitude','FontWeight','bold')
-                ylabel('longitude','FontWeight','bold')
+                xlabel('latitude [m]','FontWeight','bold')
+                ylabel('longitude [m]','FontWeight','bold')
                 title('domain')
                 grid on
                 legend()

@@ -1,7 +1,7 @@
 %% check boundary alignment
 
-Mesh_Boundaries_X = Mesh_Boundaries_Coordinates(1,:);
-Mesh_Boundaries_Y = Mesh_Boundaries_Coordinates(2,:);
+Mesh_Boundaries_X = Mesh_Boundaries_Coordinates(1,:)*110;
+Mesh_Boundaries_Y = Mesh_Boundaries_Coordinates(2,:)*110;
 Domain_Geometry_Description = [2;size(Mesh_Boundaries_Coordinates,2);...
     Mesh_Boundaries_X';Mesh_Boundaries_Y'];
 Domain_Geometry_Description_Decomposition = decsg(Domain_Geometry_Description);
@@ -20,14 +20,14 @@ boundary_counterclockwiseNodeIndexes = rows;
 if true
     figure
     plot(mesh.node_coordinates(1,rows),...
-        mesh.node_coordinates(2,rows),'ro','DisplayName','mesh bound nodes')
+        mesh.node_coordinates(2,rows),'ro','DisplayName','mesh boundary nodes')
     hold on
-    plot(x,y,'-bx','DisplayName', 'doamin bound nodes')
+    plot(x,y,'-bx','DisplayName', 'domain boundary nodes')
     title('check bounds')
     axes = gca;
     set(axes,'FontWeight','bold')
-    xlabel('latitude','FontWeight','bold')
-    ylabel('longitude','FontWeight','bold')
+    xlabel('latitude [m]','FontWeight','bold')
+    ylabel('longitude [m]','FontWeight','bold')
     legend()
     grid on
 end

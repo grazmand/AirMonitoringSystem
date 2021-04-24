@@ -13,10 +13,10 @@ classdef BoundaryConditions < matlab.mixin.SetGet
     
     methods
         function boundary_conditions(obj, vals)
-            props = {'scenario','mesh','boundary_counterclockwiseNodeIndexes'};
+            props = {'scenario','mesh'};
             obj.set(props, vals)
-            obj.mesh.set_boundary_conditions({obj, obj.boundary_counterclockwiseNodeIndexes})
             obj.set_boundary_conditions()
+            obj.mesh.set_boundary_conditions({obj})
             obj.mesh.setInternalNodes()
             obj.mesh.set_boundary_element_indexes()
             obj.mesh.set_boundary_internal_node_cell_indexes()
@@ -52,11 +52,12 @@ classdef BoundaryConditions < matlab.mixin.SetGet
                 if ~isempty(obj.neumann)
                     plot(obj.neumann.counterclockwiseNodeCoordinates(1,:),obj.neumann.counterclockwiseNodeCoordinates(2,:),'go','DisplayName','neumann');
                 end
+                
                 legend('-DynamicLegend')
                 axes = gca;
                 set(axes,'FontWeight','bold')
-                xlabel('latitude','FontWeight','bold')
-                ylabel('longitude','FontWeight','bold')
+                xlabel('latitude [m]','FontWeight','bold')
+                ylabel('longitude [m]','FontWeight','bold')
                 title('boundary conditions')
                 grid on
             end
