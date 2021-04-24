@@ -69,7 +69,7 @@ ds.dynamicSystem({time,fem,mesh,ft,0,'constant','static'})
 ds.setState()
 
 %% sensor
-s1=Sensor;
+s1=RectangularDomainSensor;
 s1.setProperties({'s1',time,0,0,mesh,ds});
 s1.viewSignalForm(true);
 

@@ -68,7 +68,7 @@ classdef Mesh < matlab.mixin.SetGet
             obj.set(props, vals)
             [nd,ed,el] = initmesh(obj.domain.decomposed_geometry,...
                 'Hmax',...
-                obj.element_length,'Hgrad',1.999);
+                obj.element_length);%'Hgrad',1);
             % convert mdeg in meters
             nd=nd*110;
             obj.set('node_coordinates',nd)

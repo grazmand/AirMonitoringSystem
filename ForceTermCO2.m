@@ -14,7 +14,8 @@ classdef ForceTermCO2 < ForceTerm
         function set_timed_element_em_rates(obj)
             % conv. emission rate from g*veh./m^3*sec. to
             % g*veh./m^3*sec.*dt^-1
-            obj.timed_element_em_rates=obj.sources.element_em_rates*obj.time.dt.value;
+            obj.timed_element_em_rates=ones(size(obj.sources.element_em_rates))*1;
+            % obj.sources.element_em_rates*obj.time.dt.value;
         end
         function setForceTerm(obj,vals)
             props={'sources'};

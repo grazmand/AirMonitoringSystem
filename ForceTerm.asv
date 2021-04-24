@@ -21,13 +21,9 @@ classdef ForceTerm < matlab.mixin.SetGet
             obj.k_frames=round(obj.i_frames*3*60*obj.time.dt.value^-1);
         end
         function plot_force_term(obj,bool)
-            if bool
-                index=1;
-                n_index=obj.mesh.allNodesExceptDirichletNodes_indexes(index);
-                ft=obj.force_term(n_index,:);
-                plot(ft,'ro')
-                title('force term over time')
-            end
+            element_index=1;
+            ft=obj.force_term(obj.source);
+            plot(ft())
         end
     end
 end

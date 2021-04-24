@@ -15,7 +15,7 @@ classdef DynamicField  < matlab.mixin.SetGet
             props = {'nodes_data','ds',...
                 'startTime','stepTime','endTime','folder'};
             obj.set(props, vals)
-            if (obj.endTime > obj.ds.ft.time.time_steps(end)) || (obj.startTime < obj.ds.ft.time.time_steps(1))
+            if (obj.endTime > obj.ds.ft.source.time.time_steps(end)) || (obj.startTime < obj.ds.ft.source.time.time_steps(1))
                 error('timing must agree!')
             end
         end
@@ -35,9 +35,10 @@ classdef DynamicField  < matlab.mixin.SetGet
                     ax.LineWidth = 6;
                     grid on
                     caxis('auto');
+%                     caxis([0 150]);
                     colorbar();
                     colormap parula % cb styles : parula, hot.
-                    tit = sprintf('carbon dioxide concentration [ppm], time %0.1d [sec.]', k*obj.ds.ft.time.dt.value);
+                    tit = sprintf('carbon dioxide concentration [ppm], time %0.1d [sec.]', k*obj.ds.ft.source.time.dt.value);
                     title(tit)
                     xlabel('latitude [Kdeg]', 'FontWeight', 'bold')
                     ylabel('longitude [Kdeg]', 'FontWeight', 'bold')

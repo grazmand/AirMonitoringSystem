@@ -173,9 +173,9 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                 %             D=-delta*DM_aned\DS_aned;
                 %             x_1 = D*x_0;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0); % - DM_d * x_1_d + DM_d * x_0_d -DS_d * x_0_d);
+                x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0 - DM_d * x_1_d + DM_d * x_0_d -DS_d * x_0_d);
             elseif nargin==8
-                x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0 + f);
+                x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0 + f - DM_d * x_1_d + DM_d * x_0_d -DS_d * x_0_d);
             elseif nargin==3
                 x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0);
             end

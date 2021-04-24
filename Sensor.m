@@ -2,13 +2,13 @@ classdef Sensor < matlab.mixin.SetGet
     properties (SetAccess = private, GetAccess = public)
         name string
         time TimeT
-        x {mustBeNonnegative}
-        y {mustBeNonpositive}
-        ds RectangularDomainDynamicSystem
-        mesh RectangularDomainMesh
+        x double
+        y double
+        ds DynamicSystem
+        mesh Mesh
         %%
         state
-        shapes double {mustBeInRange(shapes,0,1)}
+        shapes double %{mustBeInRange(shapes,0,1)}
         elementBelonged {mustBePositive}
         elementNodeIndexes {mustBePositive}
         %%

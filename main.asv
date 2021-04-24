@@ -39,7 +39,7 @@ load('./borders/coordinates_data.mat');
 border_coordinates = Mesh_Boundaries_Coordinates';
 
 % coordinates in m
-border_coordinates
+border_coordinates=border_coordinates*110;
 
 %% domain
 domain = Domain;
@@ -51,16 +51,17 @@ mesh=Mesh;
 mesh.mesh({'mesh',10,domain})
 mesh.plot_mesh(true)
 
-%% check boundaries alignment
+%% set boundaries
 run('check_boundary_alignment.m')
+mesh.set_boundaries({boundary_counterclockwiseNodeIndexes})
 
 %% scenario
 scenario = Scenario;
-scenario.scenario({'neumann'});
+scenario.scenario({'dirichlet'});
 
 %% bc
-bc = BoundaryConditions;
-bc.boundary_conditions({scenario,mesh,boundary_counterclockwiseNodeIndexes});
+bc=BoundaryConditions;
+bc.boundary_conditions({scenario,mesh});
 bc.checkBoundaryConditions(true)
 
 tlc1=false;
@@ -78,31 +79,53 @@ else
 end
 
 medium = Medium;
-d_factor=1e-2;
+d_factor=1e-6;
 medium.medium({d_factor*0.1381*10^-4,[10 0]})
 
 fem = FemModel;
 fem.fem_model({mesh,medium,bc})
 
-tlc2=true;
-if tlc2
-    sources = SourcesCO2;
-    sources.sources({'road_sources',roads,mesh,fem})
-    sources.sources_co2()
-    sources.plot_sources(true)
-    save('data/sources.mat','sources')
-else
-    load('data/sources.mat')
-end
+% tlc2=true;
+% if tlc2
+%     sources=SourcesCO2;
+%     sources.sources({'road_sources',roads,mesh,fem})
+%     sources.sources_co2()
+%     sources.plot_sources(true)
+%     save('data/sources.mat','sources')
+% else
+%     load('data/sources.mat')
+%     sources.plot_sources(true)
+% end
+% 
+% %% force term
+% ft=ForceTermCO2;
+% corr=1e0;
+% ft.forceTerm({'FT',time,mesh,corr})
+% ft.setForceTerm({sources})
+% ft.plot_force_term(true)
 
-ft = ForceTermCO2;
-corr=1e-8;
-ft.forceTerm({'FT',time,mesh,corr})
-ft.setForceTerm({sources})
+%% source
+source=ImpulsiveSource;
+source.source({'source','static',time,1,0,0,fem});
+source.checkWaveForm(true)
 
-ds = DynamicSystem;
-ds.dynamicSystem({fem,mesh,ft,400,'variable'})
+%% force term
+ft=StaticSingleSourceForceTerm;
+ft.source_force_term({'ft',source})
+
+%% dynamic system
+ds=DynamicSystem;
+ds.dynamicSystem({time,fem,mesh,ft,0,'constant','static'})
 ds.setState()
+
+%% sensor
+s1=Sensor;
+index=1;
+n_index=mesh.allNodesExceptDirichletNodes_indexes(index);
+xs=mesh.node_coordinates(1,n_index);
+ys=mesh.node_coordinates(2,n_index);
+s1.setProperties({'s1',time,xs,ys,mesh,ds});
+s1.viewSignalForm(true);
 
 %% save data
 tlc3=false;
@@ -110,7 +133,7 @@ if tlc3
     save(strcat(data_folder,'/data.mat'))
 end
 
-if true
+if false
     %% dynamic field
     nodes_data_ds = ds.state;
     df = DynamicField;

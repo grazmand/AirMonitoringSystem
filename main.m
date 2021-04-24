@@ -22,11 +22,11 @@ load('./decomposed geometry matrix/g.mat');
 
 %% dt
 dt = TimeDiscretizationStep;
-dt.time_discretization_step({1})
+dt.time_discretization_step({0.01})
 
 %% time
 time = TimeT;
-time.time({100,dt})
+time.time({3,dt})
 time.set_time
 
 %% load domain boundary
@@ -48,7 +48,7 @@ domain.plot_domain(true)
 
 %% mesh
 mesh=Mesh;
-mesh.mesh({'mesh',10,domain})
+mesh.mesh({'mesh',1,domain})
 mesh.plot_mesh(true)
 
 %% set boundaries
@@ -57,53 +57,78 @@ mesh.set_boundaries({boundary_counterclockwiseNodeIndexes})
 
 %% scenario
 scenario = Scenario;
-scenario.scenario({'neumann'});
+scenario.scenario({'dirichlet'});
 
 %% bc
 bc=BoundaryConditions;
 bc.boundary_conditions({scenario,mesh});
 bc.checkBoundaryConditions(true)
 
-tlc1=false;
-%% handle road data
-if tlc1
-    [street,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
-    roads=Roads;
-    roads.structures({roads_poly,mesh})
-    roads.set_rgb_list({List});
-    roads.set_long_max({street.long_max});
-    roads.plot_blocks(true)
-    save('data/roads.mat','roads')
-else
-    load('data/roads.mat')
-end
+% tlc1=false;
+% %% handle road data
+% if tlc1
+%     [street,List,buildpoly,Inbuildpoly,roads_poly] = Handle_Street(main_folder);
+%     roads=Roads;
+%     roads.structures({roads_poly,mesh})
+%     roads.set_rgb_list({List});
+%     roads.set_long_max({street.long_max});
+%     roads.plot_blocks(true)
+%     save('data/roads.mat','roads')
+% else
+%     load('data/roads.mat')
+% end
 
-medium = Medium;
+%% medium
+medium=Medium;
 d_factor=1e0;
-medium.medium({d_factor*0.1381*10^-4,[10 0]})
+% medium.medium({d_factor*0.1381*10^-4,[10 0]})
+medium.medium({0,[0 -100]})
 
+%% fem model
 fem = FemModel;
 fem.fem_model({mesh,medium,bc})
 
-tlc2=true;
-if tlc2
-    sources=SourcesCO2;
-    sources.sources({'road_sources',roads,mesh,fem})
-    sources.sources_co2()
-    sources.plot_sources(true)
-    save('data/sources.mat','sources')
-else
-    load('data/sources.mat')
-end
+% tlc2=true;
+% if tlc2
+%     sources=SourcesCO2;
+%     sources.sources({'road_sources',roads,mesh,fem})
+%     sources.sources_co2()
+%     sources.plot_sources(true)
+%     save('data/sources.mat','sources')
+% else
+%     load('data/sources.mat')
+%     sources.plot_sources(true)
+% end
+% 
+% %% force term
+% ft=ForceTermCO2;
+% corr=1e0;
+% ft.forceTerm({'FT',time,mesh,corr})
+% ft.setForceTerm({sources})
+% ft.plot_force_term(true)
 
-ft=ForceTermCO2;
-corr=1e0;
-ft.forceTerm({'FT',time,mesh,corr})
-ft.setForceTerm({sources})
+%% source
+source=ImpulsiveSource;
+source.source({'source','static',time,1,0,0,fem});
+source.checkWaveForm(true)
 
+%% force term
+ft=StaticSingleSourceForceTerm;
+ft.source_force_term({'ft',source})
+
+%% dynamic system
 ds=DynamicSystem;
-ds.dynamicSystem({fem,mesh,ft,400,'variable'})
+ds.dynamicSystem({time,fem,mesh,ft,0,'constant','static'})
 ds.setState()
+
+%% sensor
+s1=Sensor;
+index=1;
+n_index=mesh.allNodesExceptDirichletNodes_indexes(index);
+xs=mesh.node_coordinates(1,n_index);
+ys=mesh.node_coordinates(2,n_index);
+s1.setProperties({'s1',time,xs,ys,mesh,ds});
+s1.viewSignalForm(true);
 
 %% save data
 tlc3=false;

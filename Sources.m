@@ -165,7 +165,13 @@ classdef Sources < matlab.mixin.SetGet
             if bool
                 figure
                 plot(str2double(obj.coordinates(:,1)),str2double(obj.coordinates(:,2)),'ro')
-                title('source coords')
+                title('source points')
+                axes = gca;
+                set(axes,'FontWeight','bold')
+                xlabel('latitude [m]','FontWeight','bold')
+                ylabel('longitude [m]','FontWeight','bold')
+                legend('points','roads and boundaries')
+                grid on
             end
         end
     end

@@ -6,7 +6,7 @@ classdef Source  < matlab.mixin.SetGet
         frequency {mustBePositive}
         x double
         y double
-        fem RectangularDomainFemModel
+        fem FemModel
         
         shapes double {mustBeInRange(shapes,0,1)}
         elementBelonged {mustBePositive}
