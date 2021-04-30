@@ -34,14 +34,14 @@ classdef RectangularDomainDynamicField  < matlab.mixin.SetGet
                     ax.FontWeight = 'bold';
                     ax.LineWidth = 6;
                     grid on
-                    %caxis([0,0.1]);
+%                     caxis([0,0.1]);
                     caxis('auto');
                     colorbar();
                     colormap parula % cb styles : parula, hot.
                     tit = sprintf('carbon dioxide concentration [ppm], time %0.1d [sec.]', k*obj.ds.time.dt.value);
                     title(tit)
-                    xlabel('latitude [Kdeg]', 'FontWeight', 'bold')
-                    ylabel('longitude [Kdeg]', 'FontWeight', 'bold')
+                    xlabel('x [m]', 'FontWeight', 'bold')
+                    ylabel('y [m]', 'FontWeight', 'bold')
                     if bool2==true
                         if ismember(indexFig,1:9)
                             fileName = sprintf('%s/fig000%d.png', obj.folder, indexFig);

@@ -118,7 +118,6 @@ classdef RectangularDomainMesh < matlab.mixin.SetGet
                 set(axes,'FontWeight','bold')
                 xlabel('x_{axis} [m]','FontWeight','bold')
                 ylabel('y_{axis} [m]','FontWeight','bold')
-                legend()
                 grid on
             end
         end

@@ -2,8 +2,8 @@ classdef RectangularDomainSensor < matlab.mixin.SetGet
     properties (SetAccess = private, GetAccess = public)
         name string
         time TimeT
-        x {mustBeNonnegative}
-        y {mustBeNonpositive}
+        x double
+        y double
         ds RectangularDomainDynamicSystem
         mesh RectangularDomainMesh
         %%
@@ -61,9 +61,10 @@ classdef RectangularDomainSensor < matlab.mixin.SetGet
         function viewSignalForm(obj,bool)
             if bool==true
                 figure
-                plot(1:length(obj.time.times), obj.signalForm(1:end),'-rx')
-                tit = sprintf('%s signalform', obj.name);
-                xlabel('time steps')
+                plot(obj.time.times, obj.signalForm(1:end),'-rx')
+                tit=sprintf('%s signalform', obj.name);
+                xlabel('time [sec.]')
+                ylabel('pollutant concentration [ppm]')
                 title(tit)
             end
         end

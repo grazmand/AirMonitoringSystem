@@ -53,8 +53,8 @@ classdef RectangularDomainBoundaryConditions < matlab.mixin.SetGet
                 legend('-DynamicLegend')
                 axes = gca;
                 set(axes,'FontWeight','bold')
-                xlabel('x_axis [m]','FontWeight','bold')
-                ylabel('y_axis [y]','FontWeight','bold')
+                xlabel('x_{axis} [m]','FontWeight','bold')
+                ylabel('y_{axis} [y]','FontWeight','bold')
                 title('boundary conditions')
                 grid on
             end

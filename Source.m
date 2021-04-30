@@ -6,7 +6,7 @@ classdef Source  < matlab.mixin.SetGet
         frequency {mustBePositive}
         x double
         y double
-        fem FemModel
+        fem RectangularDomainFemModel
         
         shapes double {mustBeInRange(shapes,0,1)}
         elementBelonged {mustBePositive}
@@ -59,7 +59,7 @@ classdef Source  < matlab.mixin.SetGet
                 dt=obj.time.dt.value;
                 time_steps=obj.time.time_steps;
                 wf=(1-omega^2/2*((time_steps *dt)-peak).^2 ).* exp(-omega^2*((obj.time.time_steps*dt)-peak).^2/4);
-                obj.source_wave_form=wf;
+                obj.source_wave_form=0*wf;
             elseif ismember('rect_pulse_train',obj.wave_form_type)
                 % https://it.mathworks.com/matlabcentral/answers/55423-how-can-i-plot-a-rectangular-train-wave
                 obj.waveForm = RectPulseTrain;

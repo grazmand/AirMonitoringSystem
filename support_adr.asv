@@ -4,12 +4,10 @@
 
 x=mesh.node_coordinates(1,:);
 y=mesh.node_coordinates(2,:);
-% ind=find((x.^2+y.^2)==min(x.^2+y.^2));
-% x(ind)
-% y(ind)
-x=10; y=10;
-% p=ds.state(ind,:);
-p=s1.signalForm;
+ind=find((x.^2+y.^2)==min(x.^2+y.^2));
+x(ind)
+y(ind)
+p=ds.state(ind,:);
 t=time.times;
 
 figure
@@ -21,9 +19,9 @@ plot(t,p,'-ro')
 sigma=ds.sigma;
 vx=speed(1);
 vy=speed(2);
-e1=exp(-0.25*((x-vx*t).^2)./(0.25*sigma^2+d_rate*t));
-e2=exp(-0.25*((y-vy*t).^2)./(0.25*sigma^2+d_rate*t));
-pan=0.25*sigma^2*(1./(0.25*sigma^2+d_rate*t)).*e1.*e2;
+e1=-((x(ind)-d_rate*t).^2)./(sigma^2+vx*t);
+e2=-((y(ind)-d_rate*t).^2)./(sigma^2+vy*t);
+pan=sigma^2*(1./(sqrt(sigma^2*vx*t).*sqrt(sigma^2*vy*t)))*e1*e2;
 
 hold on
 plot(t,pan,'-bx')

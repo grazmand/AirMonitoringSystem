@@ -4,10 +4,11 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
         mesh RectangularDomainMesh
         ft StaticSingleSourceForceTerm
         time TimeT
-        dirichletValue double = 0 % u.m. in ppm - g/m^3;
-        stateInitialCondition double = 0 % u.m. in ppm - g/m^3;
+        dirichletValue double=0 % u.m. in ppm - g/m^3;
+        stateInitialCondition double=0 % u.m. in ppm - g/m^3;
         dirichlet_type string % 'static', 'variable'
         initial_state_type string % 'constant', 'gaussian'
+        sigma double
         
         initial_state double
         state double {mustBeNonNan}
@@ -17,7 +18,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
         
         function dynamicSystem(obj, vals)
             props = {'time','fem','mesh','ft','stateInitialCondition',...
-                'initial_state_type','dirichlet_type'};
+                'initial_state_type','sigma','dirichlet_type'};
             obj.set(props, vals)
         end
         
@@ -44,9 +45,8 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                 for in=1:length(anedn_indexes)
                     x=obj.mesh.allNodesExceptDirichletNodes_coordinates(1,in);
                     y=obj.mesh.allNodesExceptDirichletNodes_coordinates(2,in);
-                    r=sqrt(x^2+y^2);
-                    sigma=6;
-                    obj.initial_state(anedn_indexes(in)) = (r<=20)*exp(-((x^2/sigma^2)+(y^2/sigma^2)))+0*(r>20);
+                    % r=sqrt(x^2+y^2);
+                    obj.initial_state(anedn_indexes(in))=exp(-((x^2/obj.sigma^2)+(y^2/obj.sigma^2)));
                 end
                 obj.initial_state(dirichlet_indexes) = obj.dirichletValue;
             end
