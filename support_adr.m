@@ -2,8 +2,8 @@
 % y=mesh.node_coordinates(2,:);
 % ind=find((x.^2+y.^2)==min(x.^2+y.^2));
 
-x=mesh.node_coordinates(1,:);
-y=mesh.node_coordinates(2,:);
+% x=mesh.node_coordinates(1,:);
+% y=mesh.node_coordinates(2,:);
 % ind=find((x.^2+y.^2)==min(x.^2+y.^2));
 % x(ind)
 % y(ind)
@@ -12,7 +12,7 @@ x=10; y=10;
 p=s1.signalForm;
 t=time.times;
 
-figure
+h=figure;
 plot(t,p,'-ro')
 
 
@@ -32,3 +32,12 @@ title('analyitical vs fem solution')
 xlabel('time [sec.]')
 
 legend('fem','analytical')
+
+axes=gca;
+set(axes,'FontWeight','bold')
+xlabel('time [sec.]','FontWeight','bold')
+ylabel('pollutant concentration [ppm]','FontWeight','bold')
+grid on
+filename=sprintf('%s/comparison.png',image_folder);
+fig_fn=sprintf('%s/comparison.fig',image_folder);
+saveas(h,filename); saveas(h,fig_fn)

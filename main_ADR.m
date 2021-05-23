@@ -12,6 +12,10 @@ fprintf('---------air quality monitoring system at %s---------\n',currDate)
 data_folder = sprintf('data/sim_%s', currDate);
 mkdir(data_folder)
 
+%% picture folder
+image_folder = sprintf('%s/pics', data_folder);
+mkdir(image_folder)
+
 %% simulator video folder
 videoFolderName = sprintf('%s/simulator/video', data_folder);
 mkdir(videoFolderName)
@@ -52,7 +56,7 @@ d_rate=5;
 medium.medium({d_rate,speed})
 
 %% fen model
-fem = RectangularDomainFemModel;
+fem=RectangularDomainFemModel;
 fem.fem_model({mesh,medium,bc})
 
 %% source
@@ -78,8 +82,10 @@ s1.viewSignalForm(true);
 if true
     nodes_data_ds=ds.state;
     df=RectangularDomainDynamicField;
-    n_frame=15;
+    n_frame=5;
     df.dynamicField({nodes_data_ds,ds,time.time_steps(1),round((time.time_steps(end)-time.time_steps(1))/n_frame),time.time_steps(end),videoFolderName});
     df.plotField(true, true)
     VideoManager.videoMaker(videoFolderName, '*.png', 'field.avi', true);
 end
+
+run('support_adr.m')
