@@ -2,7 +2,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
     properties (SetAccess = private, GetAccess = public)
         fem RectangularDomainFemModel
         mesh RectangularDomainMesh
-        ft StaticSingleSourceForceTerm
+        ft double %force term
         time TimeT
         dirichletValue double=0 % u.m. in ppm - g/m^3;
         stateInitialCondition double=0 % u.m. in ppm - g/m^3;
@@ -85,7 +85,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
             S_aned=obj.fem.stifnessMatrix_allNodesExceptDirichletNodes;
             M_d=obj.fem.massMatrix_dirichlet;
             S_d=obj.fem.stifnessMatrix_dirichlet;
-            f=obj.ft.force_term;
+            f=obj.ft;
             
             %             D=0.5*(M_aned\S_aned);
             %             D=((eye(size(D))+delta*D)\...

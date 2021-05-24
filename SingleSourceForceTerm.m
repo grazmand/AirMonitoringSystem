@@ -2,7 +2,7 @@ classdef SingleSourceForceTerm < matlab.mixin.SetGet
     properties (SetAccess = private, GetAccess = public)
         %% basics
         name string
-        source ImpulsiveSource
+        source Source
         %% derivative
         force_term double
     end

@@ -9,12 +9,16 @@
 % y(ind)
 x=10; y=10;
 % p=ds.state(ind,:);
-p=s1.signalForm;
+p1=s1.signalForm;
 t=time.times;
 
-figure
-plot(t,p,'-ro')
+p2=
+p3=
+p4=
+p5=
 
+h=figure;
+plot(t,p1,'-ro')
 
 %%%%%%%%%%%%% analytical %%%%%%%%%%%%%%%
 % pan=9*exp(-0.25*(x(ind)^2+y(ind)^2)./(2*t+9))./(2*t+9);
@@ -31,13 +35,13 @@ plot(t,pan,'-bx')
 title('analyitical vs fem solution')
 xlabel('time [sec.]')
 
-legend('fem','analytical')
+legend('fem L=1.5m','analytical')
 
 axes=gca;
 set(axes,'FontWeight','bold')
 xlabel('time [sec.]','FontWeight','bold')
-ylabel('distance [m]','FontWeight','bold')
+ylabel('pollutant concentration [ppm]','FontWeight','bold')
 grid on
-filename=sprintf('%s/comparison.png',image_filter_folder);
-fig_fn=sprintf('%s/comparison.fig',image_filter_folder);
+filename=sprintf('%s/comparison.png',image_folder);
+fig_fn=sprintf('%s/comparison.fig',image_folder);
 saveas(h,filename); saveas(h,fig_fn)

@@ -3,54 +3,49 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{mathtools}
+\usepackage{xmpmulti}
+\usepackage[T1]{fontenc}
+\usepackage[ansinew]{inputenc}
 
+%path and template
 \graphicspath{{./images/}}
 \setbeamertemplate{caption}[numbered]
 
+%info
 \title{Air Quality Monitoring Wireless System}
-%\subtitle{Basics}
 \author{Graziano A. Manduzio, PhD student}
 \institute{University of Florence}
 \date{\today}
 
-%% new command
+%newcommand
 \newcommand{\B}{\pmb{B}}
 \newcommand{\mb}{\mathbf}
-\newcommand{\be}{\begin{equation}}
-\newcommand{\ee}{\end{equation}}
 \newcommand{\bs}{\boldsymbol}
-\newcommand{\bff}{\begin{frame}}
-\newcommand{\eff}{\end{frame}}
 
 \begin{document}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 	\titlepage
 	\center{supervisors: Giorgio Battistelli, Luigi Chisci ,Nicola Forti and Roberto Sabatini}
 \end{frame}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 Advection-diffusion-reaction model equation: second order pde equation
 \begin{equation}
 		\displaystyle{\frac{\partial x}{\partial t}} - \lambda \nabla^2 x + \mb{v}^T \nabla x  ~=~ f \,\,\,\,\, \mbox{in } \mathbb{R}^2
 \end{equation}
-
 where:\\
 	$x(\mb{p},t)$ is the space-time dependent pollutant concentration field, defined over the space-time domain with an initial condition $x(\mb{p},0)=x_{0}$;\\
 	$\mb{p} \in \mathbb{R}^2$ denotes the $2$-dimensional position vector;\\
 	$t \in \mathbb{R}^{+}$ denotes time;\\
 	$\lambda$ is the diffusion coefficient;\\
 	$\mb{v}(\mb{p},t)$ is the advection velocity vector;\\
-	$f(\mb{p},t)$ represents the internal sources of pollution.\\
-	$f(\mb{p},t)=s(t)F(\mb{p})$
+	$f(\mb{p},t)=s(t)F(\mb{p})$ represents the internal sources of pollution, defined as the product of the signal wavelength $s(t)$ and the position-depending base function $F(\mb{p})$
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 We need to truncate the physical domain to solve numerically the problem by using the finite element method (FEM).
 \end{frame}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 variational formulation of the problem:\\
@@ -62,13 +57,19 @@ variational formulation of the problem:\\
 	\]
 	where $\varphi(\mb{p})$ is a generic space-dependent weight function.
 \\ 	
+\vspace{2mm}
+Green's identity substitution\\
 $\varphi \nabla^2 x = \nabla . (\varphi \nabla x) - \nabla \varphi . \nabla x$\\
 
 \[
+\begin{array}{l}
+	\displaystyle
 	\int_\Omega \frac{\partial x}{\partial t} \varphi \, d\mb{p} \, - \,
 	\lambda \int_\Omega \nabla . (\varphi \nabla x) \, d\mb{p} + \lambda \int_\Omega \nabla \varphi . \nabla x \, d\mb{p} +
-	\int_\Omega \mb{v}^T  ~\nabla x~ \varphi \, d\mb{p} =
+	\int_\Omega \mb{v}^T  ~\nabla x~ \varphi \, d\mb{p} = \\ [4mm]
+	\displaystyle
 	\int_\Omega f \varphi \, d\mb{p}
+\end{array}
 	\]\\
 	
 	\[
@@ -84,7 +85,12 @@ $\varphi \nabla^2 x = \nabla . (\varphi \nabla x) - \nabla \varphi . \nabla x$\\
 	\]
 	
 	
-\vspace{0.1cm}
+
+
+\end{frame}
+
+\begin{frame}
+
 FEM approximation:\\
 \begin{center}
 
@@ -93,12 +99,8 @@ $	x(\mb{p},t) = \sum_{j=1}^{n} \phi_{j}(\mb{p}) \, x_j(t) ~=~ \boldsymbol{\phi}^
 \end{center}
 \vspace{0.1cm}
 
-\end{frame}
-
-\begin{frame}
-
 FEM derivative model:
-
+a set of $n$ inhomogeneus differential equations
 
 \begin{multline} 
 \small{\underbrace{\left[ \int_\Omega  
@@ -124,21 +126,29 @@ $F(\mb{p})=\delta(\mb{p}-\mb{p}_s)$\\
 $$\int_\Omega \bs{\phi}(\mb{p})
 			F(\mb{p}) d\mb{p} = \int_\Omega \bs{\phi}(\mb{p})
 			\delta(\mb{p}-\mb{p}_s) d\mb{p}=\bs{\phi}(\mb{p}_s)$$
-example2: multiple point source\\
+example2:\\
+multiple point source\\
+\vspace{1mm}
 $f(\mb{p},t)=\sum_{s=1}^{N_s} s_s(t) \delta(\mb{p}-\mb{p}_s)$\\
 $$\int_\Omega \bs{\phi}(\mb{p})
-			F(\mb{p}) d\mb{p} = \sum_{s=1}^{N_s} \int_\Omega \bs{\phi}(\mb{p})
-			\delta(\mb{p}-\mb{p}_s) d\mb{p}= \dfrac{1}{N_s} \sum_{s=1}^{N_s} \bs{\phi}(\mb{p}_s)$$
+			f(\mb{p},t) d\mb{p} = \sum_{s=1}^{N_s} s_s(t) \int_\Omega \bs{\phi}(\mb{p})
+			\delta(\mb{p}-\mb{p}_s) d\mb{p}= \sum_{s=1}^{N_s} s_s(t) \bs{\phi}(\mb{p}_s)$$\\
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-Advection model:\\
-advection velocity vector $=[5 5]$ m/sec.
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-Diffusion model:\\
+Advection Diffusion Model:\\
+advection velocity vector $=[5 \hspace{2mm} 5]$ m/sec.\\
 diffusion coefficient $=5$ ppm/m$^2$
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+        \transduration<0-6>{0}
+        \multiinclude[<+->][format=png, graphics={width=\textwidth}]{pics/fig}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\center
+\includegraphics[scale=0.6]{pics/comparison.png}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

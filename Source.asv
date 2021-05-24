@@ -2,7 +2,6 @@ classdef Source  < matlab.mixin.SetGet
     properties  (SetAccess=private, GetAccess=public)
         name string
         type string
-        wave_type string
         time TimeT
         frequency {mustBePositive}
         x double
@@ -17,7 +16,7 @@ classdef Source  < matlab.mixin.SetGet
     
     methods
         function source(obj, vals)
-            props={'name','type','wave_type','time','frequency','x','y','fem'};
+            props={'name','type','time','frequency','x','y','fem'};
             obj.set(props,vals)
             %% setting
             obj.set_source_wave_form()
@@ -54,26 +53,26 @@ classdef Source  < matlab.mixin.SetGet
         end
         
         function set_source_wave_form(obj)
-            if ismember('impulsive',obj.wave_type)
+            if ismember('impulsive',obj.wave_form_type)
                 omega=2*pi*obj.frequency;
                 peak=3;
                 dt=obj.time.dt.value;
                 time_steps=obj.time.time_steps;
                 wf=(1-omega^2/2*((time_steps *dt)-peak).^2 ).* exp(-omega^2*((obj.time.time_steps*dt)-peak).^2/4);
                 obj.source_wave_form=wf;
-            elseif ismember('gaussian',obj.wave_type)
+            elseif ismember('gaussian',obj.wave_form_type)
                 time_steps=obj.time.time_steps;
-                amp=10;
-                cnt=time_steps(round(end/2));
-                sig=time_steps(round(end/10));
+                amp=1;
+                cnt=round(time_steps/2);
+                sig=round(time_steps/10);
                 gauss = @(x,a,b,c) a*exp(-(((x-b).^2)/(2*c.^2)));
-                signal=gauss(time_steps, amp, cnt, sig);
-                obj.source_wave_form=signal;
-            elseif ismember('constant',obj.wave_type)
+                y = gauss(time_steps, amp, cnt, sig);
+                obj.source_wave_form=y;    
+            elseif ismember('constant',obj.wave_form_type)
                 c=1;
                 time_steps=obj.time.time_steps;
-                obj.source_wave_form=c*ones(size(time_steps));
-            elseif ismember('rect_pulse_train',obj.wave_type)
+                obj.source_wave_form=c*ones(size(time_steps)); 
+            elseif ismember('rect_pulse_train',obj.wave_form_type)
                 % https://it.mathworks.com/matlabcentral/answers/55423-how-can-i-plot-a-rectangular-train-wave
                 obj.waveForm = RectPulseTrain;
                 obj.waveForm.type = 'rect_pulse_train';
@@ -87,7 +86,7 @@ classdef Source  < matlab.mixin.SetGet
                 obj.discreteTimeSourceTerm = obj.waveForm.amplitude * square(obj.waveForm.omega*(times_0-obj.waveForm.period*obj.waveForm.positiveSignalWidth/200),...
                     obj.waveForm.positiveSignalWidth);
                 obj.discreteTimeSourceTerm = obj.discreteTimeSourceTerm(1:end-1);
-            elseif ismember('sinusoidal',obj.wave_type)
+            elseif ismember('sinusoidal',obj.wave_form_type)
                 obj.waveForm = Sinusoidal;
                 obj.waveForm.type = 'sinusoidal';
                 obj.waveForm.frequency = obj.frequency;
