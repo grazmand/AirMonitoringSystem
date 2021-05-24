@@ -47,8 +47,9 @@ domain.domain({'domain',border_coordinates,g})
 domain.plot_domain(true)
 
 %% mesh
+element_length=20;
 mesh=Mesh;
-mesh.mesh({'mesh',1,domain})
+mesh.mesh({'mesh',element_length,domain})
 mesh.plot_mesh(true)
 
 %% set boundaries
@@ -88,29 +89,29 @@ medium.medium({0,[0 -20]})
 fem = FemModel;
 fem.fem_model({mesh,medium,bc})
 
-% tlc2=true;
-% if tlc2
-%     sources=SourcesCO2;
-%     sources.sources({'road_sources',roads,mesh,fem})
-%     sources.sources_co2()
-%     sources.plot_sources(true)
-%     save('data/sources.mat','sources')
-% else
-%     load('data/sources.mat')
-%     sources.plot_sources(true)
-% end
-% 
-% %% force term
-% ft=ForceTermCO2;
-% corr=1e0;
-% ft.forceTerm({'FT',time,mesh,corr})
-% ft.setForceTerm({sources})
-% ft.plot_force_term(true)
+tlc2=true;
+if tlc2
+    sources=SourcesCO2;
+    sources.sources({'road_sources',roads,mesh,fem})
+    sources.sources_co2()
+    sources.plot_sources(true)
+    save('data/sources.mat','sources')
+else
+    load('data/sources.mat')
+    sources.plot_sources(true)
+end
 
-%% source
-source=ImpulsiveSource;
-source.source({'source','static',time,0.5,0,0,fem});
-source.checkWaveForm(true)
+%% force term
+ft=ForceTermCO2;
+corr=1e0;
+ft.forceTerm({'FT',time,mesh,corr})
+ft.setForceTerm({sources})
+ft.plot_force_term(true)
+
+% %% source
+% source=Source;
+% source.source({'source','static','impulsive',time,0.5,0,0,fem});
+% source.checkWaveForm(true)
 
 %% force term
 ft=StaticSingleSourceForceTerm;

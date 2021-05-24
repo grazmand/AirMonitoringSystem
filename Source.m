@@ -7,7 +7,7 @@ classdef Source  < matlab.mixin.SetGet
         frequency {mustBePositive}
         x double
         y double
-        fem RectangularDomainFemModel
+        fem %RectangularDomainFemModel or FemModel
         
         shapes double {mustBeInRange(shapes,0,1)}
         elementBelonged {mustBePositive}
@@ -62,12 +62,12 @@ classdef Source  < matlab.mixin.SetGet
                 wf=(1-omega^2/2*((time_steps *dt)-peak).^2 ).* exp(-omega^2*((obj.time.time_steps*dt)-peak).^2/4);
                 obj.source_wave_form=wf;
             elseif ismember('gaussian',obj.wave_type)
-                time_steps=obj.time.time_steps;
+                times=obj.time.times;
                 amp=10;
-                cnt=time_steps(round(end/2));
-                sig=time_steps(round(end/10));
+                cnt=1.5;
+                sig=0.3;
                 gauss = @(x,a,b,c) a*exp(-(((x-b).^2)/(2*c.^2)));
-                signal=gauss(time_steps, amp, cnt, sig);
+                signal=gauss(times, amp, cnt, sig);
                 obj.source_wave_form=signal;
             elseif ismember('constant',obj.wave_type)
                 c=1;

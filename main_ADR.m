@@ -30,7 +30,7 @@ dt.time_discretization_step({0.01/2})
 
 %% time
 time=TimeT;
-time.time({5,dt})
+time.time({20,dt})
 time.set_time
 
 %% domain
@@ -39,7 +39,7 @@ domain.rec_domain({-30,50,-30,50})
 domain.plot_domain(true)
 
 %% mesh
-element_length=2;
+element_length=1;
 mesh=RectangularDomainMesh;
 mesh.mesh({'mesh',element_length,domain})
 % good elementh length for analytical solution is 1 m
@@ -56,7 +56,7 @@ bc.checkBoundaryConditions(true)
 
 %% medium
 medium=Medium;
-speed=[5 5]; % u.m. m/sec.
+speed=[2 2]; % u.m. m/sec.
 d_rate=0.1;
 medium.medium({d_rate,speed})
 
@@ -66,7 +66,7 @@ fem.fem_model({mesh,medium,bc})
 
 %% sources
 source1=Source;
-source1.source({'source1','static','gaussian',time,1,-20,20,fem});
+source1.source({'source1','static','gaussian',time,1,0,0,fem});
 source1.checkWaveForm(true)
 
 source2=Source;
@@ -77,10 +77,10 @@ source2.checkWaveForm(true)
 ft1=StaticSingleSourceForceTerm;
 ft1.source_force_term({'ft1',source1})
 
-ft2=StaticSingleSourceForceTerm;
-ft2.source_force_term({'ft2',source2})
+% ft2=StaticSingleSourceForceTerm;
+% ft2.source_force_term({'ft2',source2})
 
-ft=ft1.force_term+ft2.force_term;
+ft=ft1.force_term;
 
 %% dynamic system
 ds=RectangularDomainDynamicSystem;
@@ -89,7 +89,7 @@ ds.setState()
 
 %% sensor
 s1=RectangularDomainSensor;
-s1.setProperties({'s1',time,10,10,mesh,ds});
+s1.setProperties({'s1',time,0,0,mesh,ds});
 s1.viewSignalForm(true);
 
 %% dynamic field
