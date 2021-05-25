@@ -34,7 +34,7 @@ classdef RectangularDomainDynamicField  < matlab.mixin.SetGet
                     ax.FontWeight = 'bold';
                     ax.LineWidth = 6;
                     grid on
-                    caxis([0,1]);
+                    caxis([0,2]);
 %                     caxis('auto');
                     colorbar();
                     colormap parula % cb styles : parula, hot.

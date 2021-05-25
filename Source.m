@@ -8,6 +8,9 @@ classdef Source  < matlab.mixin.SetGet
         x double
         y double
         fem %RectangularDomainFemModel or FemModel
+        amp
+        cnt
+        sig
         
         shapes double {mustBeInRange(shapes,0,1)}
         elementBelonged {mustBePositive}
@@ -17,7 +20,7 @@ classdef Source  < matlab.mixin.SetGet
     
     methods
         function source(obj, vals)
-            props={'name','type','wave_type','time','frequency','x','y','fem'};
+            props={'name','type','wave_type','time','frequency','x','y','fem','amp','cnt','sig'};
             obj.set(props,vals)
             %% setting
             obj.set_source_wave_form()
@@ -63,11 +66,8 @@ classdef Source  < matlab.mixin.SetGet
                 obj.source_wave_form=wf;
             elseif ismember('gaussian',obj.wave_type)
                 times=obj.time.times;
-                amp=10;
-                cnt=1.5;
-                sig=0.3;
                 gauss = @(x,a,b,c) a*exp(-(((x-b).^2)/(2*c.^2)));
-                signal=gauss(times, amp, cnt, sig);
+                signal=gauss(times, obj.amp, obj.cnt, obj.sig);
                 obj.source_wave_form=signal;
             elseif ismember('constant',obj.wave_type)
                 c=1;
