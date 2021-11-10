@@ -29,7 +29,7 @@ dt=TimeDiscretizationStep;
 dt.time_discretization_step({0.01/2})
 
 %% time
-total_time=30; %um in sec.
+total_time=10; %um in sec.
 time=TimeT;
 time.time({total_time,dt})
 time.set_time
@@ -40,7 +40,7 @@ domain.rec_domain({-30,50,-30,50})
 domain.plot_domain(true)
 
 %% mesh
-element_length=2;
+element_length=5;
 mesh=RectangularDomainMesh;
 mesh.mesh({'mesh',element_length,domain})
 % good elementh length for analytical solution is 1 m
@@ -48,7 +48,7 @@ mesh.plot_mesh(true)
 
 %% scenario
 scenario = Scenario;
-scenario.scenario({'dirichlet'})
+scenario.scenario({'neumann'})
 
 %% bc
 bc=RectangularDomainBoundaryConditions;
@@ -57,48 +57,50 @@ bc.checkBoundaryConditions(true)
 
 %% medium
 medium=Medium;
-speed=[0.5 0.2]; % u.m. m/sec.
-d_rate=2;
+speed=[0.5 0.5]; % u.m. m/sec.
+d_rate=2; % um in m^2/sec
 medium.medium({d_rate,speed})
 
-%% fen model
+%% fem model
 fem=RectangularDomainFemModel;
 fem.fem_model({mesh,medium,bc})
 
-n_sources=40;
+n_sources=1;
 ft=zeros(mesh.node_size_number,1);
 for i=1:n_sources
     
-sourcei=Source;
-sourcei.source({'sourcei','static','gaussian',time,1,-20+i,-20+i,fem,10+(i-20)*0.25,...
-    1.5+i/40,0.3+i/100});    
-
-fti=StaticSingleSourceForceTerm;
-fti.source_force_term({'fti',sourcei})
-
-ft=ft+fti.force_term;
+    sourcei=Source;
+    % sourcei.source({'sourcei','static','gaussian',time,1,-20+i,-20+i,fem,10+(i-20)*0.25,...
+    %     1.5+i/40,0.3+i/100});
+    sourcei.source({'sourcei','static','gaussian',time,1,0,0,fem,25,...
+        5,2});
+    
+    fti=StaticSingleSourceForceTerm;
+    fti.source_force_term({'fti',sourcei})
+    
+    ft=ft+fti.force_term;
 end
-% %% sources
+% % %% sources
 % source1=Source;
-% source1.source({'source1','static','gaussian',time,1,-20,-20,fem});
+% source1.source({'source1','static','gaussian',time,1,-20,-20,fem,25,5,2});
 % source1.checkWaveForm(true)
-% 
+% % 
 % source2=Source;
-% source2.source({'source2','static','gaussian',time,1,-15,-15,fem});
+% source2.source({'source2','static','gaussian',time,1,-15,-15,fem,25,5,2});
 % source2.checkWaveForm(true)
 % 
 % source3=Source;
-% source3.source({'source3','static','gaussian',time,1,-5,-5,fem});
+% source3.source({'source3','static','gaussian',time,1,-5,-5,fem,25,5,2});
 % source3.checkWaveForm(true)
 % 
 % source4=Source;
-% source4.source({'source4','static','gaussian',time,1,0,0,fem});
+% source4.source({'source4','static','gaussian',time,1,0,0,fem,25,5,2});
 % source4.checkWaveForm(true)
 % 
 % source5=Source;
-% source5.source({'source5','static','gaussian',time,1,5,5,fem});
+% source5.source({'source5','static','gaussian',time,1,5,5,fem,25,5,2});
 % source5.checkWaveForm(true)
-% 
+% % 
 % %% force terms
 % ft1=StaticSingleSourceForceTerm;
 % ft1.source_force_term({'ft1',source1})
@@ -114,12 +116,12 @@ end
 % 
 % ft5=StaticSingleSourceForceTerm;
 % ft5.source_force_term({'ft5',source5})
-% 
+
 % ft=ft1.force_term+ft2.force_term+ft3.force_term+ft4.force_term+ft5.force_term;
 
 %% dynamic system
 ds=RectangularDomainDynamicSystem;
-ds.dynamicSystem({time,fem,mesh,ft,0,'constant',6,'static'})
+ds.dynamicSystem({time,fem,mesh,ft,0,'gaussian',6,'static'})
 ds.setState()
 
 %% sensor

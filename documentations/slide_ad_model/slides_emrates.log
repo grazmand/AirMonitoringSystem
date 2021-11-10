@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.10)  25 MAY 2021 23:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.10)  26 MAY 2021 16:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1720,7 +1720,7 @@ pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on slides_emrates.pdf (25 pages, 1121301 bytes).
+Output written on slides_emrates.pdf (25 pages, 1121068 bytes).
 PDF statistics:
  959 PDF objects out of 1000 (max. 8388607)
  720 compressed objects within 8 object streams

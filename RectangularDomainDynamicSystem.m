@@ -116,7 +116,8 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                     [x1]=RectangularDomainDynamicSystem.dynamicSystemSimulator(x0,DM_aned,DS_aned,DM_d,DS_d,x_1_d,x_0_d,...
                         f(anedn_indexes,k));
                 else
-                    [x1]=RectangularDomainDynamicSystem.dynamicSystemSimulator(x0,DM_aned,DS_aned);
+                    [x1]=RectangularDomainDynamicSystem.dynamicSystemSimulator(x0,DM_aned,DS_aned,DM_d,DS_d,x_1_d,x_0_d,...
+                        f(anedn_indexes,k));
                 end
                 x0 = x1;
                 obj.state(anedn_indexes,k) = x1;
@@ -175,8 +176,8 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0 - DM_d * x_1_d + DM_d * x_0_d -DS_d * x_0_d);
             elseif nargin==8
-                %x_1 = x_0 - DM_aned\(DS_aned * x_0 + f - DM_d * x_1_d + DM_d * x_0_d -DS_d * x_0_d);
-                x_1 = x_0 + DM_aned\( f - DS_aned * x_0);% - DM_d * x_1_d + DM_d * x_0_d -DS_d * x_0_d);
+                %                 x_1 = DM_aned\(DM_aned * x_0 + f - DS_aned * x_0 - DM_d * x_1_d + DM_d * x_0_d -DS_d * x_0_d);
+                x_1 = x_0 + DM_aned\(f - DS_aned * x_0);
             elseif nargin==3
                 x_1 = DM_aned\(DM_aned * x_0 - DS_aned * x_0);
             end
