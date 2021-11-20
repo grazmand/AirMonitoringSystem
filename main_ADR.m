@@ -29,18 +29,18 @@ dt=TimeDiscretizationStep;
 dt.time_discretization_step({0.01/2})
 
 %% time
-total_time=10; %um in sec.
+total_time=20; %um in sec.
 time=TimeT;
 time.time({total_time,dt})
 time.set_time
 
 %% domain
 domain=RectangularDomain;
-domain.rec_domain({-30,50,-30,50})
+domain.rec_domain({-18,15,-18,15})
 domain.plot_domain(true)
 
 %% mesh
-element_length=5;
+element_length=1;
 mesh=RectangularDomainMesh;
 mesh.mesh({'mesh',element_length,domain})
 % good elementh length for analytical solution is 1 m
@@ -57,7 +57,7 @@ bc.checkBoundaryConditions(true)
 
 %% medium
 medium=Medium;
-speed=[0.5 0.5]; % u.m. m/sec.
+speed=[3 3]; % u.m. m/sec.
 d_rate=2; % um in m^2/sec
 medium.medium({d_rate,speed})
 
@@ -72,13 +72,13 @@ for i=1:n_sources
     sourcei=Source;
     % sourcei.source({'sourcei','static','gaussian',time,1,-20+i,-20+i,fem,10+(i-20)*0.25,...
     %     1.5+i/40,0.3+i/100});
-    sourcei.source({'sourcei','static','gaussian',time,1,0,0,fem,25,...
+    sourcei.source({'sourcei','static','gaussian',time,1,0,0,fem,0,...
         5,2});
     
     fti=StaticSingleSourceForceTerm;
     fti.source_force_term({'fti',sourcei})
     
-    ft=ft+fti.force_term;
+ ft=ft+fti.force_term;
 end
 % % %% sources
 % source1=Source;
@@ -121,12 +121,12 @@ end
 
 %% dynamic system
 ds=RectangularDomainDynamicSystem;
-ds.dynamicSystem({time,fem,mesh,ft,0,'gaussian',6,'static'})
+ds.dynamicSystem({time,fem,mesh,ft,0,'gaussian',3,'static'})
 ds.setState()
 
 %% sensor
 s1=RectangularDomainSensor;
-s1.setProperties({'s1',time,0,0,mesh,ds});
+s1.setProperties({'s1',time,14.9,14.9,mesh,ds});
 s1.viewSignalForm(true);
 
 %% dynamic field

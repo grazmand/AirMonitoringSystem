@@ -34,8 +34,8 @@ classdef RectangularDomainDynamicField  < matlab.mixin.SetGet
                     ax.FontWeight = 'bold';
                     ax.LineWidth = 6;
                     grid on
-                    caxis([0,1]);
-%                     caxis('auto');
+%                     caxis([0,1]);
+                    caxis('auto');
                     colorbar();
                     colormap parula % cb styles : parula, hot.
                     tit = sprintf('carbon dioxide concentration [ppm], time %0.1d [sec.]', k*obj.ds.time.dt.value);

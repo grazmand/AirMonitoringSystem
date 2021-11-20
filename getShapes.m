@@ -1,4 +1,4 @@
-function [shape] = getShapes( fem, element, point )
+ function [shape] = getShapes( fem, element, point )
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % input :

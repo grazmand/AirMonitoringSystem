@@ -47,7 +47,7 @@ classdef RectangularDomainDynamicSystem  < matlab.mixin.SetGet
                     y=obj.mesh.allNodesExceptDirichletNodes_coordinates(2,in);
                     % r=sqrt(x^2+y^2);
 %                     obj.initial_state(anedn_indexes(in))=exp(-((x^2/obj.sigma^2)+(y^2/obj.sigma^2)));
-                 obj.initial_state(anedn_indexes(in))=exp(-(((x-7)^2/obj.sigma^2)+((y-7)^2/obj.sigma^2)))+exp(-(((x+11)^2/obj.sigma^2)+((y+11)^2/obj.sigma^2)));
+                 obj.initial_state(anedn_indexes(in))=exp(-((x^2/obj.sigma^2)+(y^2/obj.sigma^2)));
                 end
                 obj.initial_state(dirichlet_indexes) = obj.dirichletValue;
             end

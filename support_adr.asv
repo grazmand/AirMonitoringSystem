@@ -7,18 +7,18 @@
 % ind=find((x.^2+y.^2)==min(x.^2+y.^2));
 % x(ind)
 % y(ind)
-x=10; y=10;
+% x=10; y=10;
 % % p=ds.state(ind,:);
 % p1=s1.signalForm;
-t=time.times;
+% t=time.times;
 
 % h=figure;
 % hold on
 
 p1=load(ssf_path);
 p1=p1.ssf;
-h=figure;
-plot(t, p1,'ro')
+figure
+plot(time.times, p1,'ro')
 % p3=load('/home/graziano/Desktop/air quality monitoring system/data/sensor data/l5_sensor_signal_form.mat');
 % p3=p3.ssf;
 % p4=load('/home/graziano/Desktop/air quality monitoring system/data/sensor data/l10_sensor_signal_form.mat');
@@ -46,8 +46,8 @@ e11=exp(-0.25*((x-7-vx*t).^2)./(0.25*sigma^2+d_rate*t));
 e12=exp(-0.25*((y-7-vy*t).^2)./(0.25*sigma^2+d_rate*t));
 pan1=0.25*sigma^2*(1./(0.25*sigma^2+d_rate*t)).*e11.*e12;
 
-e21=exp(-0.25*((x+11-vx*t).^2)./(0.25*sigma^2+d_rate*t));
-e22=exp(-0.25*((y+11-vy*t).^2)./(0.25*sigma^2+d_rate*t));
+e11=exp(-0.25*((x+11-vx*t).^2)./(0.25*sigma^2+d_rate*t));
+e12=exp(-0.25*((y+11-vy*t).^2)./(0.25*sigma^2+d_rate*t));
 pan2=0.25*sigma^2*(1./(0.25*sigma^2+d_rate*t)).*e21.*e22;
 
 pan = pan1 + pan2;
